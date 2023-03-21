@@ -4,7 +4,10 @@ const authRouter: RouteRecordRaw[] = [
   {
     path: '/login',
     name: 'LoginPage',
-    component: () => import('../views/AuthView.vue')
+    component: () => import('../views/AuthView.vue'),
+    meta: {
+      isNotLogin: true
+    }
   }
 ]
 

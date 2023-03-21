@@ -35,14 +35,14 @@
 
 <style scoped lang="scss">
   .button {
-    border-radius: 3px;
+    border-radius: 6px;
     cursor: pointer;
     padding: 0 16px;
     display: flex;
     align-items: center;
     justify-content: center;
     &--large {
-      height: 40px;
+      height: 48px;
     }
     &--medium {
       height: 30px;

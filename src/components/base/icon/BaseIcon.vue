@@ -10,7 +10,7 @@
   import { computed } from 'vue'
 
   const props = defineProps({
-    name: {
+    icon: {
       type: String,
       default: 'icon',
       required: true
@@ -27,10 +27,10 @@
     }
   })
 
-  const symbolId = computed(() => `#icon-${props.name}`)
+  const symbolId = computed(() => `#icon-${props.icon}`)
 </script>
 
-<style scoped lang='scss'>
+<style scoped lang="scss">
   .svg-icon {
     display: inline-block;
     width: 16px;
