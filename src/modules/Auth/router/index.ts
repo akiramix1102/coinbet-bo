@@ -8,6 +8,14 @@ const authRouter: RouteRecordRaw[] = [
     meta: {
       isNotLogin: true
     }
+  },
+  {
+    path: '/verify/:type',
+    component: () => import('../views/AuthView.vue'),
+    name: 'VerifyAuth',
+    meta: {
+      isNotLogin: true
+    }
   }
 ]
 
