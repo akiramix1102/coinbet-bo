@@ -1,12 +1,12 @@
-import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useBaseStore = defineStore('base', () => {
-  const count = ref(0)
-  const doubleCount = computed(() => count.value * 2)
-  function increment() {
-    count.value++
+  const systemParams = ref({})
+  const siteKey = ref('6Ley9OYiAAAAANMWTsCkqtNIxLEhz96PE1VmS0KJ')
+
+  const setSystemParams = (data: Record<string, any>) => {
+    systemParams.value = data
   }
 
-  return { count, doubleCount, increment }
+  return { systemParams, siteKey, setSystemParams }
 })

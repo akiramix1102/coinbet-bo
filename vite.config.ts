@@ -29,7 +29,7 @@ export default defineConfig({
           prefix: 'Icon'
         })
       ],
-      imports: ['vue'],
+      imports: ['vue', 'vue-router'],
       eslintrc: {
         enabled: true
       },
@@ -49,5 +49,8 @@ export default defineConfig({
   ],
   resolve: {
     alias: [{ find: '@', replacement: fileURLToPath(new URL('./src', import.meta.url)) }]
+  },
+  server: {
+    port: 8080
   }
 })

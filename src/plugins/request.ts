@@ -2,7 +2,7 @@ import axios from 'axios'
 import Cookies from 'js-cookie'
 import { ElMessage } from 'element-plus'
 
-const API_URL: string | undefined = import.meta.env.VUE_APP_BASE_API
+const API_URL: string | undefined = import.meta.env.VITE_BASE_API
 
 const request = axios.create({
   baseURL: API_URL,

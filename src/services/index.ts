@@ -1,9 +1,5 @@
-import AuthRepository from './AuthReposetory'
-type RepositoryName = 'auth'
+import AuthRepository from './AuthRepository'
+import ParamRepository from './ParamRepository'
 
-export default function getRepository(name: RepositoryName): any {
-  switch (name) {
-    case 'auth':
-      return new AuthRepository()
-  }
-}
+export const apiAuth: AuthRepository = new AuthRepository()
+export const apiParam: ParamRepository = new ParamRepository()

@@ -41,6 +41,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    user-select: none;
     &--large {
       height: 48px;
     }
@@ -70,6 +71,19 @@
       &:hover {
         background-color: var(--background-button-neutral-hover);
       }
+    }
+
+    &--disabled {
+      cursor: default;
+      background-color: var(--background-button-disabled);
+      pointer-events: none;
+      &:hover {
+        background-color: var(--background-button-disabled);
+      }
+    }
+    &--loading {
+      cursor: default;
+      pointer-events: none;
     }
     .is-loading {
       margin-right: 6px;
