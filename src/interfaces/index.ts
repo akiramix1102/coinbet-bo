@@ -28,3 +28,8 @@ export interface IUser {
   roundsUserCanBuy: number[]
   affiliationCode: string
 }
+
+export interface ITab {
+  title: string
+  value: string
+}

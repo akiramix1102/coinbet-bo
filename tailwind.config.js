@@ -7,7 +7,9 @@ module.exports = {
     extend: {
       colors: {
         primary: '#0a0b0d',
-        hyperlink: '#0151fc'
+        hyperlink: '#0151fc',
+        'tab-active': '#0151fc',
+        'border-primary': '#d2d0ce'
       }
     }
   },

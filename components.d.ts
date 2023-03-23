@@ -12,6 +12,7 @@ declare module '@vue/runtime-core' {
     BaseButton: typeof import('./src/components/base/button/BaseButton.vue')['default']
     BaseIcon: typeof import('./src/components/base/icon/BaseIcon.vue')['default']
     BasePopup: typeof import('./src/components/base/popup/BasePopup.vue')['default']
+    BaseTab: typeof import('./src/components/base/tab/BaseTab.vue')['default']
     IEpLoading: typeof import('~icons/ep/loading')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

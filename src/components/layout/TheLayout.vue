@@ -8,7 +8,7 @@
       <el-header class="h-[70px] px-6 border-b border-solid border-[#d2d0ce]">
         <the-header />
       </el-header>
-      <el-main>
+      <el-main class="pt-6 pr-6 pl-6 pb-0 bg-[#f6f8fc]">
         <router-view />
       </el-main>
       <el-footer class="flex items-center px-6 border-t border-solid border-[#d2d0ce] text-sm">
