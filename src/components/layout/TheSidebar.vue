@@ -25,7 +25,7 @@
       </div>
     </router-link>
 
-    <router-link v-slot="{ navigate, isActive }" to="/" custom>
+    <router-link v-slot="{ navigate, isActive }" :to="{ name: 'Customer', params: { type: 'verify' } }" custom>
       <div class="menu" role="link" :class="{ 'active-link': isActive }" @click="navigate">
         <base-icon icon="menu-balance" size="32" class="icon" />
         <base-icon icon="menu-balance-active" size="32" class="icon-active" />
