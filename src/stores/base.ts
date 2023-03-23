@@ -1,5 +1,5 @@
 import type { IAssetToken } from '@/interfaces'
-import { forEach } from 'lodash-es'
+import { filter, forEach, union } from 'lodash-es'
 import { defineStore } from 'pinia'
 
 export const useBaseStore = defineStore('base', () => {
@@ -7,6 +7,7 @@ export const useBaseStore = defineStore('base', () => {
   const listAssetToken = ref<IAssetToken[]>([])
   const listRounding = ref<Record<string, number>>({})
   const siteKey = ref('6Ley9OYiAAAAANMWTsCkqtNIxLEhz96PE1VmS0KJ')
+  const popup = ref<string[]>([])
 
   const setSystemParams = (data: Record<string, any>) => {
     systemParams.value = data
@@ -23,5 +24,25 @@ export const useBaseStore = defineStore('base', () => {
     listRounding.value['PERCENT'] = 2
   }
 
-  return { systemParams, listAssetToken, siteKey, listRounding, setSystemParams, setListAssetToken, setListRounding }
+  const setOpenPopup = (isOpen: boolean, popupName: string) => {
+    if (isOpen) {
+      popup.value = union(popup.value, [popupName])
+    } else {
+      popup.value = filter(popup.value, value => {
+        return value !== popupName
+      })
+    }
+  }
+
+  return {
+    systemParams,
+    listAssetToken,
+    siteKey,
+    listRounding,
+    popup,
+    setSystemParams,
+    setListAssetToken,
+    setListRounding,
+    setOpenPopup
+  }
 })
