@@ -21,15 +21,18 @@
 
 <script setup lang="ts">
   import { useBaseStore } from '@/stores/base'
+  import { useAuthStore } from '@/modules/Auth/store/index'
   import { apiParam } from '@/services'
-  import useFormatCurrency from '@/composables/formatCurrency'
+
   const baseStore = useBaseStore()
+  const authStore = useAuthStore()
 
   const isLoading = ref(false)
 
-  onMounted(() => {
+  onMounted(async () => {
     isLoading.value = true
-    getListAssetNetwork()
+    await authStore.getInfoUser()
+    await getListAssetNetwork()
     isLoading.value = false
   })
 

@@ -1,0 +1,25 @@
+.el-dropdown__popper.popper-avatar-header {
+    padding: 5px 0 10px 0;
+
+    .item-above {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        &:hover {
+            background-color: transparent;
+        }
+        .line {
+            border-bottom: 1px solid #dbdbdb;
+            margin-top: 16px;
+            width: 100%;
+        }
+    }
+    .item-below {
+        height: 36px;
+        color: #0a0b0d;
+        &:hover {
+            background-color: #f3f2f1;
+            color: #0151fc;
+        }
+    }
+}

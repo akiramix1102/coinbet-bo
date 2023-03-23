@@ -2,13 +2,34 @@ import { apiAuth } from './../../../services/index'
 import { defineStore } from 'pinia'
 import Cookies from 'js-cookie'
 import request from '@/plugins/request'
+import type { IUser } from '@/interfaces'
 
 export const useAuthStore = defineStore('auth', () => {
-  const user = ref({})
+  const user = ref<IUser>({
+    userId: 0,
+    firstName: '',
+    lastName: '',
+    fullName: '',
+    displayName: '',
+    email: '',
+    login2faEnabled: 0,
+    avatar: '',
+    userType: '',
+    phoneVerified: 0,
+    emailVerified: 0,
+    roles: [],
+    roundsUserCanBuy: [],
+    affiliationCode: ''
+  })
 
   const isLogin = computed(() => {
     return Cookies.get('access_token') || false
   })
+
+  const getInfoUser = async () => {
+    const info = await apiAuth.getInfo()
+    user.value = info
+  }
 
   const login = async (data: Record<string, any>) => {
     try {
@@ -28,20 +49,16 @@ export const useAuthStore = defineStore('auth', () => {
       if (status) {
         await apiAuth.logout()
       }
-      user.value = {}
+      user.value = {} as IUser
       Cookies.remove('access_token')
       Cookies.remove('user_id')
       request.defaults.headers.common['Authorization'] = ''
-
+      
       return Promise.resolve()
     } catch (error) {
       return Promise.reject(error)
     }
   }
 
-  const setUserInfo = (info: Record<string, any>) => {
-    user.value = info
-  }
-
-  return { isLogin, login, logout, setUserInfo }
+  return { user, isLogin, login, logout, getInfoUser }
 })
