@@ -137,7 +137,7 @@
           ElMessage.error({ message, duration: 5000 })
           await authStore.logout()
         } else {
-          router.push({ name: 'Customer' })
+          router.push({ name: 'Customer', params: { type: 'all' } })
           message = 'Logged in successfully'
           ElMessage.success({ message, duration: 5000 })
         }

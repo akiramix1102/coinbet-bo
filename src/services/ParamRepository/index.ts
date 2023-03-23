@@ -11,4 +11,14 @@ export default class ParamsRepository {
       return Promise.reject(error)
     }
   }
+
+  async getListAssetToken(): Promise<any> {
+    try {
+      const rs = await request.get(`main/api/v1/exchange-rates`)
+      return Promise.resolve(rs.data.data)
+    } catch (error) {
+      console.log(error)
+      return Promise.reject(error)
+    }
+  }
 }

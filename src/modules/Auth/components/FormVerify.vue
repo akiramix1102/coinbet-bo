@@ -93,7 +93,7 @@
             } else {
               message = 'Verification successful'
               ElMessage.error({ message, duration: 5000 })
-              router.push({ name: 'Customer' })
+              router.push({ name: 'Customer', params: { type: 'all' } })
             }
 
             isLoading.value = false
@@ -109,7 +109,7 @@
           .verifyCode('CODE', { ...data, type: 'SMS' })
           .then(res => {
             authStore.setUserInfo(res)
-            router.push({ name: 'Customer' })
+            router.push({ name: 'Customer', params: { type: 'all' } })
           })
           .catch(error => {
             isLoading.value = false

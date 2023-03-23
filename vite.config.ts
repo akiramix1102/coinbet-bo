@@ -3,7 +3,7 @@ import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import path from 'path'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+// import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'
 
@@ -24,7 +24,7 @@ export default defineConfig({
     }),
     AutoImport({
       resolvers: [
-        ElementPlusResolver(),
+        // ElementPlusResolver(),
         IconsResolver({
           prefix: 'Icon'
         })
@@ -39,8 +39,8 @@ export default defineConfig({
       resolvers: [
         IconsResolver({
           enabledCollections: ['ep']
-        }),
-        ElementPlusResolver()
+        })
+        // ElementPlusResolver()
       ]
     }),
     Icons({
