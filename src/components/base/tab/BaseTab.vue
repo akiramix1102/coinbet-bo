@@ -5,6 +5,7 @@
       :key="index"
       class="px-3 py-4 cursor-pointer hover:text-tab-active"
       :class="{ 'text-tab-active font-semibold': tab.value === props.tabActive }"
+      @click="emit('click', tab)"
     >
       {{ tab.title }}
     </div>
@@ -23,6 +24,10 @@
     listTab: () => [],
     tabActive: ''
   })
+
+  const emit = defineEmits<{
+    (e: 'click', tab: ITab): void
+  }>()
 </script>
 
 <style scoped></style>

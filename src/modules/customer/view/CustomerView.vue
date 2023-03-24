@@ -1,6 +1,6 @@
 <template>
   <div class="shadow-md rounded bg-white">
-    <base-tab :list-tab="listTab" :tab-active="tabActive" />
+    <base-tab :list-tab="listTab" :tab-active="tabActive" @click="handleClickTab" />
   </div>
 </template>
 
@@ -19,6 +19,10 @@
   ])
 
   const tabActive = ref('ALL')
+
+  const handleClickTab = (tab: ITab) => {
+    tabActive.value = tab.value
+  }
 </script>
 
 <style scoped></style>
