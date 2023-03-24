@@ -10,10 +10,13 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     BaseButton: typeof import('./src/components/base/button/BaseButton.vue')['default']
+    BaseFilter: typeof import('./src/components/filter/BaseFilter.vue')['default']
     BaseIcon: typeof import('./src/components/base/icon/BaseIcon.vue')['default']
     BasePopup: typeof import('./src/components/base/popup/BasePopup.vue')['default']
     BaseTab: typeof import('./src/components/base/tab/BaseTab.vue')['default']
+    DropdownSort: typeof import('./src/components/filter/DropdownSort.vue')['default']
     IEpLoading: typeof import('~icons/ep/loading')['default']
+    PopperFilter: typeof import('./src/components/filter/PopperFilter.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     TheHeader: typeof import('./src/components/layout/TheHeader.vue')['default']

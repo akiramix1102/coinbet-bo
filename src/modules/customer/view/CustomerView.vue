@@ -1,6 +1,7 @@
 <template>
   <div class="shadow-md rounded bg-white">
     <base-tab :list-tab="listTab" :tab-active="tabActive" @click="handleClickTab" />
+    <base-filter />
   </div>
 </template>
 

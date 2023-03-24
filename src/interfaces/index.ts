@@ -33,3 +33,8 @@ export interface ITab {
   title: string
   value: string
 }
+
+export interface ISort {
+  title: string
+  value: string
+}

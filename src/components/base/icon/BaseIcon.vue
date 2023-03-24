@@ -1,5 +1,5 @@
 <template>
-  <span class="square-icon">
+  <span class="inline-flex">
     <svg aria-hidden="true" class="svg-icon" :style="{ width: size, height: size }">
       <use :href="symbolId" :fill="color" />
     </svg>
@@ -7,8 +7,6 @@
 </template>
 
 <script setup>
-  import { computed } from 'vue'
-
   const props = defineProps({
     icon: {
       type: String,
@@ -22,7 +20,7 @@
     },
     color: {
       type: String,
-      default: '#000',
+      default: '#5B616E',
       required: false
     }
   })
