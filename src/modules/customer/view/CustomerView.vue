@@ -1,12 +1,64 @@
 <template>
   <div class="shadow-md rounded bg-white">
     <base-tab :list-tab="listTab" :tab-active="tabActive" @click="handleClickTab" />
-    <base-filter />
+    <base-filter :list-sort="listSort" :sort-active="filter.orderBy" width-popper="518" width-dropdown="180" @sort="handleSort">
+      <template #filter>
+        <el-form label-position="top">
+          <div class="flex justify-between">
+            <el-form-item class="flex-1 mr-10" label="Created date">
+              <el-date-picker
+                v-model="filter.fromCreatedAt"
+                format="MM/DD/YYYY"
+                value-format="x"
+                placeholder="From date"
+                type="date"
+                :teleported="false"
+                :disabled-date="$event => useDisableTime($event, 'from', filter.toCreatedAt)"
+              >
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item class="flex-1 hide-label" label="1">
+              <el-date-picker
+                v-model="filter.toCreatedAt"
+                format="MM/DD/YYYY"
+                value-format="x"
+                placeholder="To date"
+                type="date"
+                :teleported="false"
+                :disabled-date="$event => useDisableTime($event, 'to', filter.fromCreatedAt)"
+              >
+              </el-date-picker>
+            </el-form-item>
+          </div>
+
+          <div class="flex justify-between">
+            <el-form-item label="Status" class="flex-1 mr-10">
+              <el-select
+                v-model="filter.type"
+                :teleported="false"
+                placeholder="Status"
+                class="w-100"
+                clearable
+                :disabled="$route.params.type === 'verify'"
+              >
+                <el-option v-for="(type, index) in listStatus" :key="index" :label="type.title" :value="type.value" />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="Status" class="flex-1">
+              <el-select v-model="filter.level" placeholder="Level" clearable :teleported="false">
+                <el-option v-for="(type, index) in listLevel" :key="index" :label="type.title" :value="type.value" />
+              </el-select>
+            </el-form-item>
+          </div>
+        </el-form>
+      </template>
+    </base-filter>
   </div>
 </template>
 
 <script setup lang="ts">
-  import type { ITab } from '@/interfaces'
+  import type { ITab, ISort } from '@/interfaces'
+  import useDisableTime from '@/composables/disableTime'
 
   const listTab = ref<ITab[]>([
     {
@@ -18,11 +70,73 @@
       value: 'VERIFY'
     }
   ])
+  const listSort = ref<ISort[]>([
+    {
+      title: 'Created date',
+      value: '1'
+    },
+    {
+      title: 'Last login',
+      value: '2'
+    }
+  ])
+  const listStatus = ref<Record<string, any>>([
+    {
+      title: 'All status',
+      value: ''
+    },
+    {
+      title: 'Verified',
+      value: 'VERIFIED'
+    }
+  ])
+  const listLevel = ref<Record<string, any>>([
+    {
+      title: 'Default',
+      value: 'DEFAULT'
+    },
+    {
+      title: 'Level 1',
+      value: 'LEVEL_1'
+    },
+    {
+      title: 'Level 2',
+      value: 'LEVEL_2'
+    },
+    {
+      title: 'Level 3',
+      value: 'LEVEL_3'
+    },
+    {
+      title: 'Level 4',
+      value: 'LEVEL_4'
+    },
+    {
+      title: 'Level 5',
+      value: 'LEVEL_5'
+    },
+    {
+      title: 'MM',
+      value: 'MM'
+    }
+  ])
 
   const tabActive = ref('ALL')
 
+  const filter = ref({
+    fromCreatedAt: '',
+    toCreatedAt: '',
+    type: '',
+    level: '',
+    orderBy: '1'
+  })
+
   const handleClickTab = (tab: ITab) => {
     tabActive.value = tab.value
+  }
+
+  const handleSort = (sort: ISort) => {
+    filter.value.orderBy = sort.value
   }
 </script>
 

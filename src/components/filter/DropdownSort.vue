@@ -5,7 +5,7 @@
       <p class="text-base ml-[10px] text-primary hover:text-[#0151fc]">Sort by</p>
     </div>
     <template #dropdown>
-      <el-dropdown-menu>
+      <el-dropdown-menu class="menu" :style="{ '--width': widthDropdown }">
         <el-dropdown-item
           v-for="(sort, index) in props.listSort"
           :key="index"
@@ -23,16 +23,30 @@
   interface IProp {
     listSort: ISort[]
     sortActive: string
+    widthDropdown?: string | number
   }
 
   const props = withDefaults(defineProps<IProp>(), {
     listSort: () => [],
-    sortActive: ''
+    sortActive: '',
+    widthDropdown: 180
+  })
+
+  const emit = defineEmits<{
+    (e: 'sort', command: ISort): void
+  }>()
+
+  const widthDropdown = computed(() => {
+    return props.widthDropdown + 'px'
   })
 
   const handleCommand = (command: ISort) => {
-    console.log('handleCommand')
+    emit('sort', command)
   }
 </script>
 
-<style scoped></style>
+<style scoped>
+  .menu {
+    width: var(--width);
+  }
+</style>

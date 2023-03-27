@@ -11,7 +11,7 @@
     <el-icon v-if="props.loading" class="is-loading">
       <i-ep-loading />
     </el-icon>
-    <div class="text-base font-semibold title">
+    <div class="title">
       <slot />
     </div>
   </div>
@@ -20,7 +20,7 @@
 <script setup lang="ts">
   interface IProps {
     size?: 'large' | 'medium' | 'small'
-    type?: 'primary' | 'neutral' | 'secondary'
+    type?: 'primary' | 'neutral' | 'secondary' | 'plain'
     disabled?: boolean
     loading?: boolean
   }
@@ -46,7 +46,7 @@
       height: 48px;
     }
     &--medium {
-      height: 30px;
+      height: 40px;
     }
     &--small {
       height: 25px;
@@ -70,6 +70,15 @@
       color: var(--text-button-neutral);
       &:hover {
         background-color: var(--background-button-neutral-hover);
+      }
+    }
+    &--plain {
+      background-color: transparent;
+      color: var(--text-button-plain);
+      border: 1px solid var(--color-border-primary);
+      &:hover {
+        color: var(--text-button-plain-hover);
+        border-color: #0078d4;
       }
     }
 

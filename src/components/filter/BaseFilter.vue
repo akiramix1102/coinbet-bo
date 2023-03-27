@@ -6,28 +6,54 @@
       </template>
     </el-input>
 
-    <popper-filter v-if="props.popper"> content </popper-filter>
+    <popper-filter v-if="props.popper" :width="widthPopper">
+      <slot name="filter" />
+    </popper-filter>
     <div v-else class="flex items-center cursor-pointer hover:text-[#0151fc]">
       <base-icon icon="filter" size="18" />
       <p class="text-base ml-[10px]">Filter</p>
     </div>
 
-    <dropdown-sort />
+    <dropdown-sort
+      :list-sort="props.listSort"
+      :sort-active="props.sortActive"
+      :width-dropdown="props.widthDropdown"
+      @sort="handleSort"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
+  import type { ISort } from '@/interfaces'
+
   interface IProp {
     popper?: boolean
     buttonRight?: boolean
+    listSort: ISort[]
+    sortActive?: string
+    widthPopper?: string | number
+    widthDropdown?: string | number
   }
 
   const props = withDefaults(defineProps<IProp>(), {
     popper: true,
-    buttonRight: false
+    buttonRight: false,
+    listSort: () => [],
+    sortActive: '',
+    widthPopper: 200,
+    widthDropdown: 180
   })
 
+  const emits = defineEmits<{
+    (e: 'sort', command: ISort): void
+    (e: 'search', text: string): void
+  }>()
+
   const search = ref('')
+
+  const handleSort = (command: ISort) => {
+    emits('sort', command)
+  }
 </script>
 
 <style scoped lang="scss">
