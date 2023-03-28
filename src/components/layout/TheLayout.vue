@@ -27,10 +27,9 @@
   const baseStore = useBaseStore()
   const authStore = useAuthStore()
 
-  const isLoading = ref(false)
+  const isLoading = ref(true)
 
   onMounted(async () => {
-    isLoading.value = true
     await authStore.getInfoUser()
     await getListAssetNetwork()
     isLoading.value = false

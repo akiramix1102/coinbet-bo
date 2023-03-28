@@ -12,12 +12,7 @@
       </div>
     </router-link>
 
-    <router-link
-      v-slot="{ navigate, isActive }"
-      :to="{ name: 'Customer', params: { type: 'all' } }"
-      exact-active-class="aaaa"
-      custom
-    >
+    <router-link v-slot="{ navigate, isActive }" :to="{ name: 'CustomerMain' }" custom>
       <div class="menu" role="link" :class="{ 'active-link': isActive }" @click="navigate">
         <base-icon icon="menu-customer" size="32" class="icon" />
         <base-icon icon="menu-customer-active" size="32" class="icon-active" />

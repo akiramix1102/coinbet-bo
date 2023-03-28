@@ -1,6 +1,6 @@
 <template>
   <span class="inline-flex">
-    <svg aria-hidden="true" class="svg-icon" :style="{ width: size, height: size }">
+    <svg aria-hidden="true" class="svg-icon" :style="{ width: size, height: size, '--color': color }">
       <use :href="symbolId" :fill="color" />
     </svg>
   </span>
@@ -20,7 +20,7 @@
     },
     color: {
       type: String,
-      default: '#5B616E',
+      default: 'inherit',
       required: false
     }
   })
@@ -33,7 +33,7 @@
     display: inline-block;
     width: 16px;
     height: 16px;
-    color: inherit;
+    color: var(--color);
     vertical-align: middle;
     fill: currentColor;
     // stroke: currentColor;

@@ -38,3 +38,9 @@ export interface ISort {
   title: string
   value: string
 }
+export interface IQuery {
+  page: number
+  limit: number
+  total: number
+  [x: string]: any
+}

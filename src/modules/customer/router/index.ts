@@ -5,12 +5,14 @@ const customerRouter: RouteRecordRaw[] = [
   {
     path: '/customer',
     component: TheLayout,
+    name: 'CustomerMain',
+    redirect: { name: 'Customer', params: { type: 'all' } },
     children: [
       {
         path: ':type',
         name: 'Customer',
         beforeEnter: (from, to, next) => {
-          if (from.params.type === 'all' || from.params.type === 'verify') {
+          if (from.params.type === 'all' || from.params.type === 'verified') {
             next()
           } else {
             next({ name: 'Customer', params: { type: 'all' } })

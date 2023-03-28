@@ -1,12 +1,12 @@
 <template>
   <div class="base-filter flex items-center py-6 pl-6">
-    <el-input v-model="search" placeholder="Search" class="mr-[30px]">
+    <el-input v-model="search" placeholder="Search" class="mr-[30px]" @input="handleSearch">
       <template #prepend>
         <base-icon icon="search" size="24" />
       </template>
     </el-input>
 
-    <popper-filter v-if="props.popper" :width="widthPopper">
+    <popper-filter v-if="props.popper" :width="widthPopper" @reset="emits('reset')" @apply="emits('apply')">
       <slot name="filter" />
     </popper-filter>
     <div v-else class="flex items-center cursor-pointer hover:text-[#0151fc]">
@@ -25,6 +25,7 @@
 
 <script setup lang="ts">
   import type { ISort } from '@/interfaces'
+  import { debounce, trim } from 'lodash-es'
 
   interface IProp {
     popper?: boolean
@@ -47,13 +48,27 @@
   const emits = defineEmits<{
     (e: 'sort', command: ISort): void
     (e: 'search', text: string): void
+    (e: 'reset'): void
+    (e: 'apply'): void
   }>()
 
   const search = ref('')
 
+  defineExpose({
+    search
+  })
+
   const handleSort = (command: ISort) => {
     emits('sort', command)
   }
+
+  const handleSearch = () => {
+    searchText()
+  }
+
+  const searchText = debounce(() => {
+    emits('search', trim(search.value))
+  }, 500)
 </script>
 
 <style scoped lang="scss">

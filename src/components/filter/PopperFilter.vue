@@ -43,11 +43,11 @@
 
   const handleApply = () => {
     isOpen.value = false
-    emit('reset')
+    emit('apply')
   }
   const handleReset = () => {
     isOpen.value = false
-    emit('apply')
+    emit('reset')
   }
 </script>
 

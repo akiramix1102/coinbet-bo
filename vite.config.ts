@@ -20,7 +20,44 @@ export default defineConfig({
       // Specify the icon folder to be cached
       iconDirs: [path.resolve(process.cwd(), 'src/icons/svg')],
       // Specify symbolId format
-      symbolId: 'icon-[dir]-[name]'
+      symbolId: 'icon-[dir]-[name]',
+      svgoOptions: false
+      // svgoOptions: {
+      //   plugins: [
+      //     'cleanupAttrs',
+      //     'cleanupEnableBackground',
+      //     'cleanupIDs',
+      //     'cleanupListOfValues',
+      //     'cleanupNumericValues',
+      //     'collapseGroups',
+      //     'convertPathData',
+      //     'convertShapeToPath',
+      //     'convertStyleToAttrs',
+      //     'convertTransform',
+      //     'mergePaths',
+      //     'removeComments',
+      //     'removeDesc',
+      //     'removeDimensions',
+      //     'removeDoctype',
+      //     'removeEditorsNSData',
+      //     'removeEmptyAttrs',
+      //     'removeEmptyContainers',
+      //     'removeEmptyText',
+      //     'removeHiddenElems',
+      //     'removeMetadata',
+      //     'removeNonInheritableGroupAttrs',
+      //     'removeRasterImages',
+      //     'removeTitle',
+      //     'removeUnknownsAndDefaults',
+      //     'removeUselessDefs',
+      //     'removeUnusedNS',
+      //     'removeUselessStrokeAndFill',
+      //     'removeXMLProcInst',
+      //     'removeStyleElement',
+      //     'removeUnknownsAndDefaults',
+      //     'sortAttrs'
+      //   ]
+      // }
     }),
     AutoImport({
       resolvers: [

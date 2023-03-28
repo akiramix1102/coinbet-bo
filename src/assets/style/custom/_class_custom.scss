@@ -1,0 +1,20 @@
+.status-not-verified,
+.status-verified {
+    border-radius: 4px;
+    font-size: 12px;
+    width: 96px;
+    height: 24px;
+    line-height: 24px;
+    vertical-align: middle;
+    display: inline-block;
+    text-align: center;
+}
+
+.status-verified {
+    color: var(--color-status-success);
+    background-color: #e4f9e2;
+}
+.status-not-verified {
+    color: var(--color-status-not-verified);
+    background-color: #f3f2f1;
+}

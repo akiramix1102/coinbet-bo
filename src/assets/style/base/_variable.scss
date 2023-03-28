@@ -1,5 +1,6 @@
 :root {
   --color-text: #0a0b0d;
+  --color-primary: #0151fc;
 
   //  button
   --background-button-primary: #0151fc;
@@ -30,6 +31,7 @@
   --color-status-invited: #dd7d00;
   --color-status-accept: #129961;
   --color-status-reject: #cf202f;
+  --color-status-not-verified: #5b616e;
 
   //color border
   --color-input-border: #dbdbdb;
@@ -48,4 +50,7 @@
   //override element plus
   --el-aside-width: 80px;
   --el-footer-padding: 0 24px;
+
+  //table
+  --table-row-hover: #f3f3f3;
 }

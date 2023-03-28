@@ -1,7 +1,17 @@
 <template>
   <div class="shadow-md rounded bg-white">
     <base-tab :list-tab="listTab" :tab-active="tabActive" @click="handleClickTab" />
-    <base-filter :list-sort="listSort" :sort-active="filter.orderBy" width-popper="518" width-dropdown="180" @sort="handleSort">
+    <base-filter
+      ref="refFilter"
+      :list-sort="listSort"
+      :sort-active="filter.orderBy"
+      width-popper="518"
+      width-dropdown="180"
+      @search="handleSearch"
+      @sort="handleSort"
+      @reset="handleReset"
+      @apply="handleApplyFilter"
+    >
       <template #filter>
         <el-form label-position="top">
           <div class="flex justify-between">
@@ -39,7 +49,7 @@
                 placeholder="Status"
                 class="w-100"
                 clearable
-                :disabled="$route.params.type === 'verify'"
+                :disabled="route.params.type === 'verified'"
               >
                 <el-option v-for="(type, index) in listStatus" :key="index" :label="type.title" :value="type.value" />
               </el-select>
@@ -53,12 +63,21 @@
         </el-form>
       </template>
     </base-filter>
+
+    <div class="px-6">
+      <customer-table :data="data" :query="query" @limit-change="handleLimitChange" @page-change="handlePageChange" />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
   import type { ITab, ISort } from '@/interfaces'
   import useDisableTime from '@/composables/disableTime'
+  import { apiCustomer } from '@/services'
+  import CustomerTable from '../components/table/CustomerTable.vue'
+
+  const router = useRouter()
+  const route = useRoute()
 
   const listTab = ref<ITab[]>([
     {
@@ -67,7 +86,7 @@
     },
     {
       title: 'Verified',
-      value: 'VERIFY'
+      value: 'VERIFIED'
     }
   ])
   const listSort = ref<ISort[]>([
@@ -128,15 +147,90 @@
     toCreatedAt: '',
     type: '',
     level: '',
-    orderBy: '1'
+    orderBy: '1',
+    search: ''
   })
+  const query = ref({
+    page: 1,
+    limit: 20,
+    total: 0
+  })
+
+  const data = ref([])
+  const refFilter = ref(null)
+
+  onMounted(async () => {
+    filter.value.type = route.params.type === 'ALL' ? '' : (route.params.type as string).toUpperCase()
+    tabActive.value = (route.params.type as string).toUpperCase()
+    await getListCustomer()
+  })
+
+  const getListCustomer = async () => {
+    try {
+      const rs = await apiCustomer.getListCustomer({ ...query.value, ...filter.value })
+      console.log(rs)
+      data.value = rs.content
+      query.value.total = rs.totalElements
+    } catch (error) {
+      data.value = []
+    }
+  }
 
   const handleClickTab = (tab: ITab) => {
     tabActive.value = tab.value
+    router.push({ params: { type: tab.value.toLowerCase() } })
+    filter.value.type = tab.value === 'ALL' ? '' : tab.value
+    resetFilter()
+    getListCustomer()
   }
 
   const handleSort = (sort: ISort) => {
     filter.value.orderBy = sort.value
+    getListCustomer()
+  }
+  const handleSearch = (text: string) => {
+    filter.value.search = text
+    getListCustomer()
+  }
+
+  const handlePageChange = (page: number) => {
+    query.value.page = page
+    getListCustomer()
+  }
+  const handleLimitChange = (limit: number) => {
+    query.value.limit = limit
+    query.value.page = 1
+    getListCustomer()
+  }
+
+  const handleApplyFilter = () => {
+    console.log('apply')
+
+    query.value.page = 1
+    getListCustomer()
+  }
+  const handleReset = () => {
+    query.value.page = 1
+    resetFilter()
+    getListCustomer()
+  }
+
+  const resetFilter = () => {
+    query.value = {
+      ...query.value,
+      page: 1
+    }
+
+    filter.value = {
+      ...filter.value,
+      fromCreatedAt: '',
+      toCreatedAt: '',
+      level: '',
+      orderBy: '1',
+      search: ''
+    }
+    //@ts-ignore
+    refFilter.value!.search = ''
   }
 </script>
 
