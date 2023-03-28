@@ -8,9 +8,10 @@
     :top="props.top"
     class="base-popup"
     @open="handleOpen"
+    @close="handleClose"
   >
-    <template #header>
-      <div class="text-l text-grey-190 text-semibold title">
+    <template #title>
+      <div class="text-l text-grey-190 text-semibold uppercase text-[18px] font-semibold">
         <slot name="title" />
       </div>
     </template>
@@ -49,6 +50,11 @@
     closePressEscape: true
   })
 
+  const emits = defineEmits<{
+    (e: 'close'): void
+    (e: 'open'): void
+  }>()
+
   const baseStore = useBaseStore()
 
   const isOpen = computed({
@@ -67,7 +73,10 @@
   })
 
   function handleOpen() {
-    console.log('open')
+    emits('open')
+  }
+  function handleClose() {
+    emits('close')
   }
 </script>
 

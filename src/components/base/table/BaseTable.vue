@@ -60,10 +60,11 @@
   const emits = defineEmits<{
     (e: 'page-change', page: number): void
     (e: 'limit-change', limit: number): void
+    (e: 'row-click', rpw: Record<string, any>): void
   }>()
 
   const handleRowClick = (row: Record<string, any>) => {
-    console.log(row)
+    emits('row-click', row)
   }
 </script>
 

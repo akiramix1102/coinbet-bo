@@ -4,9 +4,9 @@
     <base-filter
       ref="refFilter"
       :list-sort="listSort"
-      :sort-active="filter.orderBy"
       width-popper="518"
       width-dropdown="180"
+      :sort-active="filter.orderBy"
       @search="handleSearch"
       @sort="handleSort"
       @reset="handleReset"
@@ -65,9 +65,16 @@
     </base-filter>
 
     <div class="px-6">
-      <customer-table :data="data" :query="query" @limit-change="handleLimitChange" @page-change="handlePageChange" />
+      <customer-table
+        :data="data"
+        :query="query"
+        @limit-change="handleLimitChange"
+        @page-change="handlePageChange"
+        @row-click="handleRowClick"
+      />
     </div>
   </div>
+  <popup-test />
 </template>
 
 <script setup lang="ts">
@@ -75,6 +82,10 @@
   import useDisableTime from '@/composables/disableTime'
   import { apiCustomer } from '@/services'
   import CustomerTable from '../components/table/CustomerTable.vue'
+  import PopupTest from './PopupTest.vue'
+
+  import { useBaseStore } from '@/stores/base'
+  const baseStore = useBaseStore()
 
   const router = useRouter()
   const route = useRoute()
@@ -201,6 +212,9 @@
     query.value.limit = limit
     query.value.page = 1
     getListCustomer()
+  }
+  const handleRowClick = (row: Record<string, any>) => {
+    baseStore.setOpenPopup(true, 'popup-test')
   }
 
   const handleApplyFilter = () => {

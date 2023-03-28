@@ -5,6 +5,7 @@
     label="Customers"
     @limit-change="emits('limit-change', $event)"
     @page-change="emits('page-change', $event)"
+    @row-click="emits('row-click', $event)"
   >
     <el-table-column key="1" label="#" type="index" :index="indexMethod" align="center" width="80" />
     <el-table-column key="2" label="name">
@@ -74,6 +75,7 @@
   const emits = defineEmits<{
     (e: 'page-change', page: number): void
     (e: 'limit-change', limit: number): void
+    (e: 'row-click', rpw: Record<string, any>): void
   }>()
 
   const isSmallScreen = computed(() => {
