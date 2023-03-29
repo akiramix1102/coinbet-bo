@@ -10,7 +10,7 @@
     @open="handleOpen"
     @close="handleClose"
   >
-    <template #title>
+    <template #header>
       <div class="text-l text-grey-190 text-semibold uppercase text-[18px] font-semibold">
         <slot name="title" />
       </div>

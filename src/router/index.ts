@@ -7,8 +7,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: () => import('../views/HomeView.vue')
+      redirect: { name: 'Customer', params: { type: 'all' } }
     }
   ]
 })

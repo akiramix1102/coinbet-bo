@@ -36,11 +36,38 @@ export interface ITab {
 
 export interface ISort {
   title: string
-  value: string
+  value: string | number
 }
 export interface IQuery {
   page: number
   limit: number
   total: number
   [x: string]: any
+}
+
+export interface ICustomer {
+  userId: number
+  fullName: string
+  email: string
+  createdDate: string
+  avatar: string
+  referrerCode: string
+  referrerName: string
+  affiliationCode: string
+  lastTimeLogin: string
+  level: string
+  birthday: string
+  userStatus: string
+  phoneVerified: string
+  emailVerified: string
+  walletAddress: string
+  username: string
+  twitterId: string
+  twitter: string
+  telegramId: string
+  telegram: string
+  discordId: string
+  discord: string
+  isVerified: string
+  lastTransaction: string
 }

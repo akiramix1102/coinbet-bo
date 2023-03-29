@@ -4,7 +4,7 @@
       v-for="(tab, index) in props.listTab"
       :key="index"
       class="px-3 py-4 cursor-pointer hover:text-tab-active"
-      :class="{ 'text-tab-active font-semibold': tab.value === props.tabActive }"
+      :class="{ 'text-tab-active font-semibold border-b-2 border-solid border-[#0151fc]': tab.value === props.tabActive }"
       @click="emit('click', tab)"
     >
       {{ tab.title }}

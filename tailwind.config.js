@@ -9,7 +9,9 @@ module.exports = {
         primary: '#0a0b0d',
         hyperlink: '#0151fc',
         'tab-active': '#0151fc',
-        'border-primary': '#d2d0ce'
+        'border-primary': '#d2d0ce',
+        description: '#5b616e',
+        increase: '#129961'
       }
     }
   },

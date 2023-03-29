@@ -5,7 +5,7 @@
     label="Customers"
     @limit-change="emits('limit-change', $event)"
     @page-change="emits('page-change', $event)"
-    @row-click="emits('row-click', $event)"
+    @row-click="emits('row-click', $event as ICustomer)"
   >
     <el-table-column key="1" label="#" type="index" :index="indexMethod" align="center" width="80" />
     <el-table-column key="2" label="name">
@@ -57,7 +57,7 @@
   import useCopy from '@/composables/copy'
   import useFormatTxCode from '@/composables/formatTxCode'
   import useFormatDateHourMs from '@/composables/formatDateHourMs'
-  import type { IQuery } from '@/interfaces'
+  import type { ICustomer, IQuery } from '@/interfaces'
   interface IProps {
     data: Array<Record<string, any>>
     query: IQuery
@@ -75,7 +75,7 @@
   const emits = defineEmits<{
     (e: 'page-change', page: number): void
     (e: 'limit-change', limit: number): void
-    (e: 'row-click', rpw: Record<string, any>): void
+    (e: 'row-click', row: ICustomer): void
   }>()
 
   const isSmallScreen = computed(() => {
