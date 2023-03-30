@@ -28,7 +28,4 @@ declare module '@vue/runtime-core' {
     ThePageLoading: typeof import('./src/components/loading/ThePageLoading.vue')['default']
     TheSidebar: typeof import('./src/components/layout/TheSidebar.vue')['default']
   }
-  export interface ComponentCustomProperties {
-    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
-  }
 }
