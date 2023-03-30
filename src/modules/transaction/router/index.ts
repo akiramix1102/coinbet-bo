@@ -6,7 +6,7 @@ const transactionRouter: RouteRecordRaw[] = [
     path: '/transaction',
     component: TheLayout,
     name: 'TransactionMain',
-    redirect: { name: 'Transaction', params: {currency: 'MAGIC'} },
+    redirect: { name: 'TransactionDeposit', params: {currency: 'MAGIC', type: 'Deposit'} },
     children: [
       {
         path: ':currency',
@@ -17,13 +17,33 @@ const transactionRouter: RouteRecordRaw[] = [
           title: 'Transaction'
         },
         component: () => import('../view/TransactionView.vue'),
-        // children: [
-        //   {
-        //     path: ':type',
-        //     name: 'Transaction',
-        //     component: () => import('../view/TransactionView.vue'),
-        //   }
-        // ]
+        children: [
+          {
+            path: 'Deposit',
+            name: 'TransactionDeposit',
+            component: () => import('../view/TransactionView.vue'),
+          },
+          {
+            path: 'Withdraw',
+            name: 'TransactionWithdraw',
+            component: () => import('../view/TransactionView.vue'),
+          },
+          {
+            path: 'Transfer',
+            name: 'TransactionTransfer',
+            component: () => import('../view/TransactionView.vue'),
+          },
+          {
+            path: 'Bonus',
+            name: 'TransactionBonus',
+            component: () => import('../view/TransactionView.vue'),
+          },
+          {
+            path: 'Buy',
+            name: 'TransactionBuy',
+            component: () => import('../view/TransactionView.vue'),
+          },
+        ]
       }
     ]
   }

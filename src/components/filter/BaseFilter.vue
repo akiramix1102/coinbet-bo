@@ -10,7 +10,7 @@
       <popper-filter v-if="props.popper" :width="widthPopper" @reset="emits('reset')" @apply="emits('apply')">
         <slot name="filter" />
       </popper-filter>
-      <div v-else class="flex items-center cursor-pointer hover:text-[#0151fc]">
+      <div v-else class="flex items-center cursor-pointer hover:text-[#0151fc]" @click="handleOpenPopupFilter">
         <base-icon icon="filter" size="18" />
         <p class="text-base ml-[10px]">Filter</p>
       </div>
@@ -29,7 +29,8 @@
 <script setup lang="ts">
   import type { ISort } from '@/interfaces'
   import { debounce, trim } from 'lodash-es'
-
+  import { useBaseStore } from '@/stores/base'
+  const baseStore = useBaseStore()
   interface IProp {
     popper?: boolean
     buttonRight?: boolean
@@ -71,6 +72,10 @@
 
   const handleSearch = () => {
     searchText()
+  }
+
+  const handleOpenPopupFilter = () => {
+    baseStore.setOpenPopup(true, 'popup-filter-transaction')
   }
 
   const searchText = debounce(() => {
