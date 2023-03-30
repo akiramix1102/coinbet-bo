@@ -27,7 +27,7 @@
         <p class="text-[10px] mt-[3px] leading-3 text-[#201f1e]">Balance</p>
       </div>
     </router-link>
-    <router-link v-slot="{ navigate, isActive }" to="/" custom>
+    <router-link v-slot="{ navigate, isActive }" :to="{ name: 'TransactionMain' }" custom>
       <div class="menu" role="link" :class="{ 'active-link': isActive }" @click="navigate">
         <base-icon icon="menu-transaction" size="32" class="icon" />
         <base-icon icon="menu-transaction-active" size="32" class="icon-active" />
