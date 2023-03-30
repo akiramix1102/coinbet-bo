@@ -74,6 +74,8 @@
   import BonusTable from '../table/BonusTable.vue'
   import StatisticsTable from '../table/StatisticsTable.vue'
   import SettingTable from '../table/SettingTable.vue'
+  import DeviceTable from '../table/DeviceTable.vue'
+  import SocialTable from '../table/SocialTable.vue'
 
   interface IProps {
     rowData: ICustomer
@@ -110,7 +112,7 @@
     },
     {
       title: 'Devices',
-      value: 'DEVICES'
+      value: 'DEVICE'
     },
     {
       title: 'Social',
@@ -135,6 +137,12 @@
     },
     SettingTable: {
       component: () => SettingTable
+    },
+    DeviceTable: {
+      component: () => DeviceTable
+    },
+    SocialTable: {
+      component: () => SocialTable
     }
   })
 

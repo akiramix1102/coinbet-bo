@@ -5,7 +5,7 @@
     label="Customers"
     @limit-change="emits('limit-change', $event)"
     @page-change="emits('page-change', $event)"
-    @row-click="emits('row-click', $event as ICustomer)"
+    @row-click="handleRowClick"
   >
     <el-table-column key="1" label="#" type="index" :index="indexMethod" align="center" width="80" />
     <el-table-column key="2" label="name">
@@ -28,7 +28,7 @@
           <div class="text-add">
             {{ useFormatTxCode(scope.row.username, isSmallScreen ? 5 : 10) }}
           </div>
-          <div class="cursor h-6 mr-10" @click="useCopy(scope.row.username)">
+          <div class="cursor h-6 mr-10" @click="useCopy(scope.row.username), (isConflictClick = true)">
             <base-icon icon="copy" size="24" color="#A19F9D" />
           </div>
         </div>
@@ -78,6 +78,8 @@
     (e: 'row-click', row: ICustomer): void
   }>()
 
+  const isConflictClick = ref(false)
+
   const isSmallScreen = computed(() => {
     return window.innerWidth < 1400
   })
@@ -106,6 +108,14 @@
 
   const checkStatus = (status: string) => {
     return status === '1' ? 'Verified' : 'Unverified'
+  }
+
+  const handleRowClick = (row: Record<string, any>) => {
+    if (isConflictClick.value) {
+      isConflictClick.value = false
+      return
+    }
+    emits('row-click', row as ICustomer)
   }
 </script>
 
