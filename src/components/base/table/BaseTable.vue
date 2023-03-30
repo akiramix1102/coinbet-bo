@@ -19,6 +19,7 @@
       <slot />
     </el-table>
     <base-pagination
+      v-if="showPagination"
       :query="query"
       :label="label"
       @limit-change="emits('limit-change', $event)"
@@ -37,8 +38,9 @@
     showSummary?: boolean
     sumText?: string
     // summaryMethod(data: Record<string, any>): any[]
-    query: IQuery
-    label: string
+    query?: IQuery
+    label?: string
+    showPagination?: boolean
   }
 
   const props = withDefaults(defineProps<IProp>(), {
@@ -50,6 +52,7 @@
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     // summaryMethod: (_data: Record<string, any>) => [],
     label: '',
+    showPagination: true,
     query: () => ({
       page: 1,
       limit: 20,

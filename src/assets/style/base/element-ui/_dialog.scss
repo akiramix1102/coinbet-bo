@@ -6,6 +6,7 @@
         border-radius: 8px;
         overflow: hidden;
         height: fit-content;
+
         .el-dialog__header {
             height: 62px;
             border-bottom: 1px solid var(--color-border-primary);
@@ -31,6 +32,7 @@
         }
         .el-dialog__body {
             padding: 0;
+            color: var(--color-text);
             .popup-content {
                 padding: 24px;
                 max-height: 75vh;

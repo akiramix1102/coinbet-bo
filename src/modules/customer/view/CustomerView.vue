@@ -74,15 +74,15 @@
       />
     </div>
   </div>
-  <popup-test />
+  <popup-detail-customer :row-data="rowCurrent" />
 </template>
 
 <script setup lang="ts">
-  import type { ITab, ISort } from '@/interfaces'
+  import type { ITab, ISort, ICustomer } from '@/interfaces'
   import useDisableTime from '@/composables/disableTime'
   import { apiCustomer } from '@/services'
   import CustomerTable from '../components/table/CustomerTable.vue'
-  import PopupTest from './PopupTest.vue'
+  import PopupDetailCustomer from '../components/popup/PopupDetailCustomer.vue'
 
   import { useBaseStore } from '@/stores/base'
   const baseStore = useBaseStore()
@@ -169,9 +169,10 @@
 
   const data = ref([])
   const refFilter = ref(null)
+  const rowCurrent = ref<ICustomer>({} as ICustomer)
 
   onMounted(async () => {
-    filter.value.type = route.params.type === 'ALL' ? '' : (route.params.type as string).toUpperCase()
+    filter.value.type = route.params.type === 'all' ? '' : (route.params.type as string).toUpperCase()
     tabActive.value = (route.params.type as string).toUpperCase()
     await getListCustomer()
   })
@@ -196,7 +197,7 @@
   }
 
   const handleSort = (sort: ISort) => {
-    filter.value.orderBy = sort.value
+    filter.value.orderBy = sort.value as string
     getListCustomer()
   }
   const handleSearch = (text: string) => {
@@ -213,8 +214,9 @@
     query.value.page = 1
     getListCustomer()
   }
-  const handleRowClick = (row: Record<string, any>) => {
-    baseStore.setOpenPopup(true, 'popup-test')
+  const handleRowClick = (row: ICustomer) => {
+    rowCurrent.value = row
+    baseStore.setOpenPopup(true, 'popup-detail-customer')
   }
 
   const handleApplyFilter = () => {

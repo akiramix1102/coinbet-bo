@@ -6,15 +6,18 @@
       </template>
     </el-input>
 
-    <popper-filter v-if="props.popper" :width="widthPopper" @reset="emits('reset')" @apply="emits('apply')">
-      <slot name="filter" />
-    </popper-filter>
-    <div v-else class="flex items-center cursor-pointer hover:text-[#0151fc]">
-      <base-icon icon="filter" size="18" />
-      <p class="text-base ml-[10px]">Filter</p>
-    </div>
+    <template v-if="showFilter">
+      <popper-filter v-if="props.popper" :width="widthPopper" @reset="emits('reset')" @apply="emits('apply')">
+        <slot name="filter" />
+      </popper-filter>
+      <div v-else class="flex items-center cursor-pointer hover:text-[#0151fc]">
+        <base-icon icon="filter" size="18" />
+        <p class="text-base ml-[10px]">Filter</p>
+      </div>
+    </template>
 
     <dropdown-sort
+      v-if="showSort"
       :list-sort="props.listSort"
       :sort-active="props.sortActive"
       :width-dropdown="props.widthDropdown"
@@ -30,10 +33,12 @@
   interface IProp {
     popper?: boolean
     buttonRight?: boolean
-    listSort: ISort[]
+    listSort?: ISort[]
     sortActive?: string
     widthPopper?: string | number
     widthDropdown?: string | number
+    showFilter?: boolean
+    showSort?: boolean
   }
 
   const props = withDefaults(defineProps<IProp>(), {
@@ -42,7 +47,9 @@
     listSort: () => [],
     sortActive: '',
     widthPopper: 200,
-    widthDropdown: 180
+    widthDropdown: 180,
+    showFilter: true,
+    showSort: true
   })
 
   const emits = defineEmits<{
