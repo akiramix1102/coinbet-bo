@@ -9,19 +9,13 @@
           class="p-4 border border-solid border-[#dbdbdb] mr-6 rounded-lg min-w-[240px]"
         >
           <div class="flex justify-between">
-            <span class="text-[#5b616e] text-base">
-              {{ renderTitleCard(value.transactionType) }}
-            </span>
-            <div>
-              <base-icon :icon="renderIconCard(value.transactionType)" size="24" />
-            </div>
+            <span class="text-[#5b616e] text-base">{{ renderTitleCard(value.transactionType) }}</span>
+            <div><base-icon :icon="renderIconCard(value.transactionType)" size="24" /></div>
           </div>
           <div class="my-2 text-[#0a0b0d] font-semibold">
-            <p class="text-[24px] leading-6">
-              {{ value.totalAmount }}
-            </p>
+            <p class="text-[24px] leading-6">{{ value.totalAmount }}</p>
           </div>
-          <div class="">
+          <div>
             <span class="text-sm text-[#5b616e]">~${{ value.totalAmountUsd }}</span>
           </div>
         </div>
@@ -151,27 +145,11 @@
   ])
 
   const tabActiveHeader = ref('MAGIC')
-  const tabActive = ref('DEPOSIT')
-
-  const filter = ref({
-    fromCreatedAt: '',
-    toCreatedAt: '',
-    type: '',
-    level: '',
-    orderBy: '1',
-    search: ''
-  })
-  const query = ref({
-    page: 1,
-    limit: 20,
-    total: 0
-  })
-
-  const data = ref([])
-  const refFilter = ref(null)
+  const tabActive = ref('')
 
   onMounted(async () => {
     tabActiveHeader.value = (route.params.currency as string).toUpperCase()
+    tabActive.value = route.path.split('/')[3].toUpperCase()
   })
 
   const renderTitleCard = (transactionType: string) => {
@@ -191,33 +169,13 @@
 
   const handleClickTabHeader = (tab: ITab) => {
     tabActiveHeader.value = tab.value
-    router.push({ params: { type: tab.value.toLowerCase() } })
-    filter.value.type = tab.value === 'MAGIC' ? '' : tab.value
-    resetFilter()
+    router.push({ params: { currency: tab.value } })
   }
   const handleClickTab = (tab: ITab) => {
     tabActive.value = tab.value
-    router.push({ params: { type: tab.value.toLowerCase() } })
-    filter.value.type = tab.value === 'All' ? '' : tab.value
-    resetFilter()
-  }
-
-  const resetFilter = () => {
-    query.value = {
-      ...query.value,
-      page: 1
-    }
-
-    filter.value = {
-      ...filter.value,
-      fromCreatedAt: '',
-      toCreatedAt: '',
-      level: '',
-      orderBy: '1',
-      search: ''
-    }
-    //@ts-ignore
-    refFilter.value!.search = ''
+    router.push({
+      name: `Transaction${tab.value[0] + tab.value.slice(1).toLowerCase()}`
+    })
   }
 </script>
 
