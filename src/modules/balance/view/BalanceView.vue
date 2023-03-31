@@ -125,6 +125,7 @@
         @row-click="handleRowClick"
       />
     </div>
+    <popup-balance-detail :row-data="detailRowBalance"></popup-balance-detail>
   </div>
 </template>
 
@@ -133,12 +134,14 @@
   import { useBaseStore } from '@/stores/base'
   import useFormatCurrency from '@/composables/formatCurrency'
 
-  import type { IAssetToken, IQuery, ISort, ITab } from '@/interfaces'
+  import type { IAssetToken, IQuery, ISort, ITab, IBalance } from '@/interfaces'
   import type { Ref } from 'vue'
   import BalanceTable from '../components/table/BalanceTable.vue'
+  import PopupBalanceDetail from '../components/popup/PopupBalanceDetail.vue'
   import { apiBalance } from '@/services'
 
   const { listAssetToken } = storeToRefs(useBaseStore())
+  const baseStore = useBaseStore()
   const tabs: Ref<ITab[]> = ref([
     {
       title: 'MAGIC',
@@ -203,7 +206,7 @@
     limit: 10,
     total: 0
   })
-  const dataBalance: Ref<any> = ref([])
+  const dataBalance: Ref<IBalance[]> = ref([])
   const dataSummaryBalance: Ref<Record<string, number | string | any>> = ref({
     numOfInvestor: '',
     numOfUser: '',
@@ -214,6 +217,7 @@
     totalLockedUSD: '',
     totalBalanceUSD: ''
   })
+  const detailRowBalance: Ref<IBalance> = ref({} as IBalance)
   onMounted(() => {
     getListBalance()
   })
@@ -257,7 +261,10 @@
     query.value.page = page
     getListBalance()
   }
-  const handleRowClick = (row: any) => {}
+  const handleRowClick = (row: IBalance) => {
+    detailRowBalance.value = row
+    baseStore.setOpenPopup(true, 'popup-detail-balance')
+  }
 </script>
 
 <style scoped lang="scss"></style>

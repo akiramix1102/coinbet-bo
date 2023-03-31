@@ -2,7 +2,7 @@
   <base-table
     :data="props.data"
     :query="query"
-    label="Balance"
+    label="investors"
     @limit-change="emits('limit-change', $event)"
     @page-change="emits('page-change', $event)"
     @row-click="handleRowClick"
@@ -41,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-  import type { IQuery } from '@/interfaces'
+  import type { IQuery, IBalance } from '@/interfaces'
   import useFormatCurrency from '@/composables/formatCurrency'
 
   interface IProps {
@@ -61,14 +61,16 @@
   const emits = defineEmits<{
     (e: 'page-change', page: number): void
     (e: 'limit-change', limit: number): void
-    (e: 'row-click', row: any): void
+    (e: 'row-click', row: IBalance): void
   }>()
 
   const indexMethod = (index: number) => {
     return (props.query.page - 1) * props.query.limit + index + 1
   }
 
-  const handleRowClick = (row: Record<string, any>) => {}
+  const handleRowClick = (row: IBalance) => {
+    emits('row-click', row)
+  }
 </script>
 
 <style scoped lang="scss"></style>
