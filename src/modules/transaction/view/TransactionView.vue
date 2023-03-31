@@ -20,16 +20,17 @@
           </div>
         </div>
       </div>
+      <base-filter ref="refFilter" :list-sort="listSort" :popper="false" width-dropdown="230"> </base-filter>
     </div>
-    <div class="shadow-md rounded bg-white">
-      <base-tab :list-tab="listTab" :tab-active="tabActive" @click="handleClickTab" />
-    </div>
+
+    <popup-filter-transaction :is-show-footer="true"></popup-filter-transaction>
   </div>
 </template>
 
 <script setup lang="ts">
   import type { ITab, ISort } from '@/interfaces'
-
+  import PopupFilterTransaction from '../components/popup/PopupFilterTransaction.vue'
+  import { apiTransaction } from '@/services'
   import { useBaseStore } from '@/stores/base'
   const baseStore = useBaseStore()
 
@@ -66,28 +67,12 @@
     }
   ])
 
-  const listTab = ref<ITab[]>([
-    {
-      title: 'Deposit',
-      value: 'DEPOSIT'
-    },
-    {
-      title: 'Withdraw',
-      value: 'WITHDRAW'
-    },
-    {
-      title: 'Transfer',
-      value: 'TRANSFER'
-    },
-    {
-      title: 'Bonus',
-      value: 'BONUS'
-    },
-    {
-      title: 'Buy',
-      value: 'BUY'
-    }
-  ])
+  const query = ref({
+    page: 1,
+    limit: 20,
+    total: 0,
+    orderBy: '1'
+  })
   const listSort = ref<ISort[]>([
     {
       title: 'Transaction date',
@@ -100,20 +85,6 @@
     {
       title: 'Status',
       value: '3'
-    }
-  ])
-  const listStatus = ref<Record<string, any>>([
-    {
-      title: 'Pending',
-      value: 'PENDING'
-    },
-    {
-      title: 'Processing',
-      value: 'PROCESSING'
-    },
-    {
-      title: 'Success',
-      value: 'SUCCESS'
     }
   ])
 
@@ -141,16 +112,58 @@
       totalAmount: 19689480.0,
       transactionType: 'BONUS',
       totalAmountUsd: '196,894.80'
+    },
+    {
+      numOfTransaction: 5,
+      totalAmount: 19689480.0,
+      transactionType: 'BET',
+      totalAmountUsd: '196,894.80'
+    },
+    {
+      numOfTransaction: 6,
+      totalAmount: 19689480.0,
+      transactionType: 'PRIZE',
+      totalAmountUsd: '196,894.80'
+    },
+    {
+      numOfTransaction: 7,
+      totalAmount: 19689480.0,
+      transactionType: 'BUY',
+      totalAmountUsd: '196,894.80'
     }
   ])
+  const data = ref([])
 
   const tabActiveHeader = ref('MAGIC')
-  const tabActive = ref('')
 
   onMounted(async () => {
     tabActiveHeader.value = (route.params.currency as string).toUpperCase()
-    tabActive.value = route.path.split('/')[3].toUpperCase()
+    await getListTransaction()
   })
+
+  const getListTransaction = async () => {
+    try {
+      const params = {
+        ...query,
+        // transactionType: tabActive.value,
+        orderBy: query.value.orderBy,
+        limit: query.value.limit,
+        page: query.value.page,
+        currency: tabActiveHeader.value,
+        // fromDate: filter.value.fromTransactionDate,
+        // toDate: filter.value.toTransactionDate,
+        // fromAmount: filter.value.fromTransactionAmount,
+        // toAmount: filter.value.toTransactionAmount,
+        total: null
+      }
+      const result = await apiTransaction.getListTransaction('search', params)
+      console.log('🚀 ~ file: TransactionView.vue:176 ~ getListTransaction ~ result:', result)
+      data.value = result.content
+      query.value.total = result.totalElements
+    } catch (e) {
+      data.value = []
+    }
+  }
 
   const renderTitleCard = (transactionType: string) => {
     if (transactionType === 'DEPOSIT') return 'Total Deposit'
@@ -158,6 +171,8 @@
     if (transactionType === 'TRANSFER') return 'Total Transfer'
     if (transactionType === 'WITHDRAW') return 'Total Withdraw'
     if (transactionType === 'BUY') return 'Total Buy'
+    if (transactionType === 'BET') return 'Total Bet'
+    if (transactionType === 'PRIZE') return 'Total Prize'
   }
   const renderIconCard = (transactionType: string) => {
     if (transactionType === 'DEPOSIT') return 'icon-download'
@@ -170,12 +185,6 @@
   const handleClickTabHeader = (tab: ITab) => {
     tabActiveHeader.value = tab.value
     router.push({ params: { currency: tab.value } })
-  }
-  const handleClickTab = (tab: ITab) => {
-    tabActive.value = tab.value
-    router.push({
-      name: `Transaction${tab.value[0] + tab.value.slice(1).toLowerCase()}`
-    })
   }
 </script>
 
