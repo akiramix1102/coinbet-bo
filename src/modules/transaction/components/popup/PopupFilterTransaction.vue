@@ -1,21 +1,143 @@
 <template>
-  <base-popup name="popup-detail-customer" width="1200px" class="popup-detail-customer" :is-show-footer="false">
-    <template #title>Customer detail</template>
+  <base-popup name="popup-filter-transaction" width="600px" class="popup-filter-transaction" :is-show-footer="false">
+    <template #title>Filter</template>
+    <el-form label-position="top">
+      <div class="flex justify-between">
+        <el-form-item class="flex-1 mr-10" label="Transaction Type">
+          <el-select v-model="filter.transactionType">
+            <el-option
+              v-for="(type, index) in listTransactionType"
+              :key="index"
+              :label="type.title"
+              :value="type.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item class="flex-1" label="Status">
+          <el-select v-model="filter.status">
+            <el-option v-for="(type, index) in listStatus" :key="index" :label="type.title" :value="type.value"></el-option>
+          </el-select>
+        </el-form-item>
+      </div>
+      <div class="flex justify-between">
+        <el-form-item class="flex-1 mr-10" label="Transaction Date">
+          <el-date-picker
+            v-model="filter.fromTransactionDate"
+            format="MM/DD/YYYY"
+            value-format="x"
+            placeholder="From date"
+            type="date"
+            :teleported="false"
+            :disabled-date="$event => useDisableTime($event, 'from', filter.toTransactionDate)"
+          >
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item class="flex-1 hide-label" label="1">
+          <el-date-picker
+            v-model="filter.toTransactionDate"
+            format="MM/DD/YYYY"
+            value-format="x"
+            placeholder="To date"
+            type="date"
+            :teleported="false"
+            :disabled-date="$event => useDisableTime($event, 'to', filter.fromTransactionDate)"
+          >
+          </el-date-picker>
+        </el-form-item>
+      </div>
+      <div class="flex justify-between">
+        <el-form-item class="flex-1 mr-10" label="Transaction Amount">
+          <el-input v-model="filter.fromTransactionAmount" placeholder="From amount">
+            <template #prefix>
+              <div class="text-base text-[#0a0b0d]">$</div>
+            </template>
+          </el-input>
+        </el-form-item>
+        <el-form-item class="flex-1 hide-label" label="1">
+          <el-input v-model="filter.toTransactionAmount" placeholder="To amount">
+            <template #prefix>
+              <div class="text-base text-[#0a0b0d]">$</div>
+            </template>
+          </el-input>
+        </el-form-item>
+      </div>
+    </el-form>
+    <template #footer>
+      <button
+        class="border border-solid border-[#d2d0ce] w-[120px] rounded-lg mr-[15px] font-normal text-sm h-10 text-[#3b3a39]"
+        @click="handleReset"
+      >
+        Reset
+      </button>
+      <button
+        class="border border-solid border-[#d2d0ce] w-[120px] rounded-lg font-normal text-sm h-10 text-[#fff] bg-[#0151fc]"
+        @click="handleApply"
+      >
+        Continue
+      </button>
+    </template>
   </base-popup>
 </template>
 
 <script setup lang="ts">
-  // import type { ITransaction } from '@/interfaces'
+  import useDisableTime from '@/composables/disableTime'
+  const filter = ref({
+    fromTransactionDate: '',
+    toTransactionDate: '',
+    fromTransactionAmount: '',
+    toTransactionAmount: '',
+    status: '',
+    transactionType: ''
+  })
 
-  // interface IProps {
-  //   rowData: ITransaction
-  // }
+  const listStatus = ref<Record<string, any>>([
+    {
+      title: 'Pending',
+      value: 'PENDING'
+    },
+    {
+      title: 'Processing',
+      value: 'PROCESSING'
+    },
+    {
+      title: 'Success',
+      value: 'SUCCESS'
+    }
+  ])
+  const listTransactionType = ref<Record<string, any>>([
+    {
+      title: 'Deposit',
+      value: 'DEPOSIT'
+    },
+    {
+      title: 'Withdraw',
+      value: 'WITHDRAW'
+    },
+    {
+      title: 'Transfer',
+      value: 'TRANSFER'
+    },
+    {
+      title: 'Bonus',
+      value: 'BONUS'
+    },
+    {
+      title: 'Buy',
+      value: 'BUY'
+    }
+  ])
+  const emit = defineEmits(['reset', 'apply'])
+
+  const handleReset = () => {
+    emit('reset')
+  }
+  const handleApply = () => {
+    emit('apply')
+  }
 </script>
 
 <style lang="scss">
-  .popup-detail-customer {
-    .popup-content {
-      background-color: #f6f8fc;
-    }
+  .popup-filter-transaction {
+    --el-dialog-margin-top: 15vh !important;
   }
 </style>
