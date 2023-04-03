@@ -40,6 +40,7 @@
     widthDropdown?: string | number
     showFilter?: boolean
     showSort?: boolean
+    popupName?: string
   }
 
   const props = withDefaults(defineProps<IProp>(), {
@@ -50,7 +51,8 @@
     widthPopper: 200,
     widthDropdown: 180,
     showFilter: true,
-    showSort: true
+    showSort: true,
+    popupName: ''
   })
 
   const emits = defineEmits<{
@@ -75,7 +77,7 @@
   }
 
   const handleOpenPopupFilter = () => {
-    baseStore.setOpenPopup(true, 'popup-filter-transaction')
+    baseStore.setOpenPopup(true, props.popupName)
   }
 
   const searchText = debounce(() => {

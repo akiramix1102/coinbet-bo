@@ -4,7 +4,7 @@
     <el-form label-position="top">
       <div class="flex justify-between">
         <el-form-item class="flex-1 mr-10" label="Transaction Type">
-          <el-select v-model="filter.transactionType">
+          <el-select v-model="filter.transactionType" :clearable="true" class="w-full">
             <el-option
               v-for="(type, index) in listTransactionType"
               :key="index"
@@ -14,7 +14,7 @@
           </el-select>
         </el-form-item>
         <el-form-item class="flex-1" label="Status">
-          <el-select v-model="filter.status">
+          <el-select v-model="filter.status" :clearable="true" class="w-full">
             <el-option v-for="(type, index) in listStatus" :key="index" :label="type.title" :value="type.value"></el-option>
           </el-select>
         </el-form-item>
@@ -23,6 +23,7 @@
         <el-form-item class="flex-1 mr-10" label="Transaction Date">
           <el-date-picker
             v-model="filter.fromTransactionDate"
+            class="!w-full"
             format="MM/DD/YYYY"
             value-format="x"
             placeholder="From date"
@@ -35,6 +36,7 @@
         <el-form-item class="flex-1 hide-label" label="1">
           <el-date-picker
             v-model="filter.toTransactionDate"
+            class="!w-full"
             format="MM/DD/YYYY"
             value-format="x"
             placeholder="To date"
@@ -128,11 +130,23 @@
   ])
   const emit = defineEmits(['reset', 'apply'])
 
+  const resetFilter = () => {
+    filter.value = {
+      transactionType: '',
+      status: '',
+      fromTransactionDate: '',
+      toTransactionDate: '',
+      fromTransactionAmount: '',
+      toTransactionAmount: ''
+    }
+  }
+
   const handleReset = () => {
+    resetFilter()
     emit('reset')
   }
   const handleApply = () => {
-    emit('apply')
+    emit('apply', filter)
   }
 </script>
 

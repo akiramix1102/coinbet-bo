@@ -1,7 +1,11 @@
 <template>
   <div>
     <div class="shadow-md rounded bg-white mb-6">
-      <base-tab :list-tab="tabsHeader" :tab-active="tabActiveHeader" @click="handleClickTabHeader" />
+      <base-tab :list-tab="tabsHeader" :tab-active="tabActiveHeader" @click="handleClickTabHeader">
+        <template #more-tab>
+          <MoreToken @select="handleClickTabMore"></MoreToken>
+        </template>
+      </base-tab>
       <div class="p-6 flex">
         <div
           v-for="(value, index) in dataHeaderCard"
@@ -20,10 +24,24 @@
           </div>
         </div>
       </div>
-      <base-filter ref="refFilter" :list-sort="listSort" :popper="false" width-dropdown="230"> </base-filter>
+      <base-filter
+        ref="refFilter"
+        :list-sort="listSort"
+        :popper="false"
+        width-dropdown="230"
+        :popup-name="'popup-filter-transaction'"
+        @sort="handleSort"
+      >
+      </base-filter>
+      <table-transaction class="px-6"></table-transaction>
     </div>
 
-    <popup-filter-transaction :is-show-footer="true"></popup-filter-transaction>
+    <popup-filter-transaction
+      :is-show-footer="true"
+      @reset="handleResetFilter"
+      @apply="handleApplyFilter"
+      @search="handleSearch"
+    ></popup-filter-transaction>
   </div>
 </template>
 
@@ -32,6 +50,7 @@
   import PopupFilterTransaction from '../components/popup/PopupFilterTransaction.vue'
   import { apiTransaction } from '@/services'
   import { useBaseStore } from '@/stores/base'
+  import TableTransaction from '../components/TableTransaction.vue'
   const baseStore = useBaseStore()
 
   const router = useRouter()
@@ -43,6 +62,15 @@
     transactionType: string | any
     totalAmountUsd: number | any
   }
+  const searchParams = ref({
+    transactionType: '',
+    status: '',
+    fromTransactionDate: '',
+    toTransactionDate: '',
+    fromTransactionAmount: '',
+    toTransactionAmount: '',
+    search: ''
+  })
 
   const tabsHeader = ref<ITab[]>([
     {
@@ -141,19 +169,27 @@
     await getListTransaction()
   })
 
+  const handleClickTabMore = (tab: string) => {
+    tabActiveHeader.value = tab
+    router.push({ params: { currency: tab } })
+    resetFilter()
+    getListTransaction()
+  }
+
   const getListTransaction = async () => {
     try {
       const params = {
-        ...query,
-        // transactionType: tabActive.value,
+        // ...query,
+        status: searchParams.value.status,
+        transactionType: searchParams.value.transactionType,
         orderBy: query.value.orderBy,
         limit: query.value.limit,
         page: query.value.page,
         currency: tabActiveHeader.value,
-        // fromDate: filter.value.fromTransactionDate,
-        // toDate: filter.value.toTransactionDate,
-        // fromAmount: filter.value.fromTransactionAmount,
-        // toAmount: filter.value.toTransactionAmount,
+        fromDate: searchParams.value.fromTransactionDate,
+        toDate: searchParams.value.toTransactionDate,
+        fromAmount: searchParams.value.fromTransactionAmount,
+        toAmount: searchParams.value.toTransactionAmount,
         total: null
       }
       const result = await apiTransaction.getListTransaction('search', params)
@@ -163,6 +199,45 @@
     } catch (e) {
       data.value = []
     }
+  }
+  const handleSort = (sort: ISort) => {
+    query.value.orderBy = sort.value as string
+    getListTransaction()
+  }
+  const handleSearch = (text: string) => {
+    searchParams.value.search = text
+    getListTransaction()
+  }
+
+  const resetFilter = () => {
+    query.value = {
+      ...query.value,
+      page: 1
+    }
+    searchParams.value = {
+      transactionType: '',
+      status: '',
+      fromTransactionDate: '',
+      toTransactionDate: '',
+      fromTransactionAmount: '',
+      toTransactionAmount: '',
+      search: ''
+    }
+  }
+
+  const handleResetFilter = () => {
+    resetFilter()
+    baseStore.setOpenPopup(false, 'popup-filter-transaction')
+    getListTransaction()
+  }
+  const handleApplyFilter = (filter: Record<string, any>) => {
+    searchParams.value.transactionType = filter.value.transactionType
+    searchParams.value.status = filter.value.status
+    searchParams.value.fromTransactionDate = filter.value.fromTransactionDate
+    searchParams.value.toTransactionDate = filter.value.toTransactionDate
+    searchParams.value.fromTransactionAmount = filter.value.fromTransactionAmount
+    searchParams.value.toTransactionAmount = filter.value.toTransactionAmount
+    getListTransaction()
   }
 
   const renderTitleCard = (transactionType: string) => {
