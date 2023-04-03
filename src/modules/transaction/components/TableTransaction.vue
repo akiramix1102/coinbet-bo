@@ -9,22 +9,30 @@
   >
     <el-table-column key="1" label="#" type="index" :index="indexMethod" align="center" width="80" />
 
-    <el-table-column key="2" label="transaction id" prop="transactionId" width="200">
+    <el-table-column key="2" label="transaction id" prop="transactionId">
       <template #default="scope">
-        <span>{{ useFormatDateHourMs(scope.row.createdDate) }}</span>
+        <span>{{ useFormatTxCode(scope.row.transactionCode, 10) }}</span>
       </template>
     </el-table-column>
-    <el-table-column key="6" label="date" prop="createdDate" width="200">
+    <el-table-column key="63" label="date" prop="createdDate" width="220">
       <template #default="scope">
-        <span>{{ useFormatDateHourMs(scope.row.createdDate) }}</span>
+        <span>{{ useFormatDateHourMs(scope.row.transactionMillisecond) }}</span>
       </template>
     </el-table-column>
-    <el-table-column key="6" label="date" prop="createdDate" width="200">
+    <el-table-column key="4" label="customer" prop="createdDate" width="200">
       <template #default="scope">
-        <span>{{ useFormatDateHourMs(scope.row.createdDate) }}</span>
+        <div>
+          <p>{{ scope.row.fullName }}</p>
+          <p class="text-sm font-normal text-[#5b616e]">{{ scope.row.email }}</p>
+        </div>
       </template>
     </el-table-column>
-    <el-table-column key="7" label="status" prop="emailVerified" align="center" :width="isSmallScreen ? 140 : 160">
+    <el-table-column key="5" label="status" prop="emailVerified" align="center" :width="isSmallScreen ? 140 : 160">
+      <template #default="scope">
+        <span :class="checkType(scope.row.status)">{{ checkStatus(scope.row.status) }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column key="6" label="amount" prop="emailVerified" align="center" :width="isSmallScreen ? 140 : 160">
       <template #default="scope">
         <span :class="checkType(scope.row.emailVerified)">{{ checkStatus(scope.row.emailVerified) }}</span>
       </template>
@@ -40,6 +48,7 @@
   interface IProps {
     data: Array<Record<string, any>>
     query: IQuery
+    isLoading: boolean
   }
 
   const props = withDefaults(defineProps<IProps>(), {
@@ -48,7 +57,8 @@
       page: 1,
       limit: 20,
       total: 0
-    })
+    }),
+    isLoading: () => false
   })
   const emits = defineEmits<{
     (e: 'page-change', page: number): void

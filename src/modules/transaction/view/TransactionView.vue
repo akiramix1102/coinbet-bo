@@ -33,7 +33,7 @@
         @sort="handleSort"
       >
       </base-filter>
-      <table-transaction class="px-6"></table-transaction>
+      <table-transaction class="px-6" :is-loading="isLoading" :data="data" :query="query"></table-transaction>
     </div>
 
     <popup-filter-transaction
@@ -55,6 +55,7 @@
 
   const router = useRouter()
   const route = useRoute()
+  const isLoading: Ref<boolean> = ref(false)
 
   interface IDataCard {
     numOfTransaction: number | any
@@ -178,6 +179,7 @@
 
   const getListTransaction = async () => {
     try {
+      isLoading.value = true
       const params = {
         // ...query,
         status: searchParams.value.status,
@@ -194,8 +196,10 @@
       }
       const result = await apiTransaction.getListTransaction('search', params)
       console.log('🚀 ~ file: TransactionView.vue:176 ~ getListTransaction ~ result:', result)
-      data.value = result.content
+      data.value = result.transactions.content
+      console.log('🚀 ~ file: TransactionView.vue:200 ~ getListTransaction ~ data.value:', data.value)
       query.value.total = result.totalElements
+      isLoading.value = false
     } catch (e) {
       data.value = []
     }
@@ -237,6 +241,7 @@
     searchParams.value.toTransactionDate = filter.value.toTransactionDate
     searchParams.value.fromTransactionAmount = filter.value.fromTransactionAmount
     searchParams.value.toTransactionAmount = filter.value.toTransactionAmount
+    baseStore.setOpenPopup(false, 'popup-filter-transaction')
     getListTransaction()
   }
 
