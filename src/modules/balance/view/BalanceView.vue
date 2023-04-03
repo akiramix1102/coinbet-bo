@@ -1,11 +1,8 @@
 <template>
   <div class="layout-balance shadow-md rounded bg-white">
-    <!--    <div class="flex items-center border-b border-solid border-border-primary">-->
-    <!--      <div class="px-3 py-4 cursor-pointer hover:text-tab-active text-tab-active font-semibold">MAGIC</div>-->
-    <!--    </div>-->
     <base-tab :list-tab="getTabBaseToken" :tab-active="tabActive" @click="handleClickTab">
       <template #more-tab>
-        <MoreToken @select="handleClickTab"></MoreToken>
+        <MoreToken @select="handleClickTabMore"></MoreToken>
       </template>
     </base-tab>
 
@@ -15,7 +12,7 @@
       >
         <div class="flex justify-between mt-1.5">
           <p>Investor</p>
-          <base-icon icon="balance-icon-investor" size="19"></base-icon>
+          <base-icon icon="balance-icon-investor" size="19" color="#DD7D00"></base-icon>
         </div>
         <span class="w-full text-[24px] leading-[24px] mt-2 inline-block font-semibold">{{
           dataSummaryBalance.numOfInvestor
@@ -27,7 +24,7 @@
       >
         <div class="flex justify-between mt-1.5">
           <p>Total Available</p>
-          <base-icon icon="balance-icon-swap" size="19"></base-icon>
+          <base-icon icon="balance-icon-swap" size="19" color="#129961"></base-icon>
         </div>
         <span class="w-full text-[24px] leading-[24px] mt-2 inline-block font-semibold">
           {{ useFormatCurrency(dataSummaryBalance.totalAvailable, tabActive) }}
@@ -62,19 +59,39 @@
         <p class="text-sm font-normal mt-2 mb-4">${{ useFormatCurrency(dataSummaryBalance.totalBalanceUSD, 'USD') }}</p>
       </div>
     </div>
-    <base-filter width-popper="518" width-dropdown="180" :sort-active="filter.orderBy" :list-sort="listSort">
+    <base-filter
+      width-popper="518"
+      width-dropdown="180"
+      :sort-active="filter.orderBy"
+      :list-sort="listSort"
+      @search="handleSearch"
+      @sort="handleSort"
+      @reset="handleReset"
+      @apply="handleApplyFilter"
+      ref="refFilter"
+    >
       <template #filter>
         <el-form label-position="top">
           <div class="flex justify-between">
             <el-form-item class="flex-1 mr-10" label="Available amount">
-              <el-input placeholder="From">
+              <el-input
+                placeholder="From"
+                v-model="filter.fromAvailableAmount"
+                @keypress.native="useOnlyNumber($event, filter.fromAvailableAmount)"
+                @keyup.native="useFormatNumberInput($event)"
+              >
                 <template #prefix>
                   <span class="h-full text-base flex items-center text-[#0a0b0d]">$</span>
                 </template>
               </el-input>
             </el-form-item>
             <el-form-item class="flex-1 mt-5" label=" ">
-              <el-input placeholder="To">
+              <el-input
+                placeholder="To"
+                v-model="filter.toAvailableAmount"
+                @keypress.native="useOnlyNumber($event, filter.toAvailableAmount)"
+                @keyup.native="useFormatNumberInput($event)"
+              >
                 <template #prefix>
                   <span class="h-full text-base flex items-center text-[#0a0b0d]">$</span>
                 </template>
@@ -83,14 +100,24 @@
           </div>
           <div class="flex justify-between">
             <el-form-item class="flex-1 mr-10" label="Locked amount">
-              <el-input placeholder="From">
+              <el-input
+                placeholder="From"
+                v-model="filter.fromLockedAmount"
+                @keypress.native="useOnlyNumber($event, filter.fromLockedAmount)"
+                @keyup.native="useFormatNumberInput($event)"
+              >
                 <template #prefix>
                   <span class="h-full text-base flex items-center text-[#0a0b0d]">$</span>
                 </template>
               </el-input>
             </el-form-item>
             <el-form-item class="flex-1 mt-5" label=" ">
-              <el-input placeholder="To">
+              <el-input
+                placeholder="To"
+                v-model="filter.toLockedAmount"
+                @keypress.native="useOnlyNumber($event, filter.toLockedAmount)"
+                @keyup.native="useFormatNumberInput($event)"
+              >
                 <template #prefix>
                   <span class="h-full text-base flex items-center text-[#0a0b0d]">$</span>
                 </template>
@@ -99,14 +126,24 @@
           </div>
           <div class="flex justify-between">
             <el-form-item class="flex-1 mr-10" label="Balance">
-              <el-input placeholder="From">
+              <el-input
+                placeholder="From"
+                v-model="filter.fromBalanceAmount"
+                @keypress.native="useOnlyNumber($event, filter.fromBalanceAmount)"
+                @keyup.native="useFormatNumberInput($event)"
+              >
                 <template #prefix>
                   <span class="h-full text-base flex items-center text-[#0a0b0d]">$</span>
                 </template>
               </el-input>
             </el-form-item>
             <el-form-item class="flex-1 mt-5" label=" ">
-              <el-input placeholder="To">
+              <el-input
+                placeholder="To"
+                v-model="filter.toBalanceAmount"
+                @keypress.native="useOnlyNumber($event, filter.toBalanceAmount)"
+                @keyup.native="useFormatNumberInput($event)"
+              >
                 <template #prefix>
                   <span class="h-full text-base flex items-center text-[#0a0b0d]">$</span>
                 </template>
@@ -118,6 +155,7 @@
     </base-filter>
     <div class="px-6">
       <balance-table
+        :isLoading="isLoading"
         :data="dataBalance"
         :query="query"
         @limit-change="handleLimitChange"
@@ -133,6 +171,8 @@
   import { storeToRefs } from 'pinia'
   import { useBaseStore } from '@/stores/base'
   import useFormatCurrency from '@/composables/formatCurrency'
+  import useOnlyNumber from '@/composables/onlyNumber'
+  import useFormatNumberInput from '@/composables/formatNumberInput'
 
   import type { IAssetToken, IQuery, ISort, ITab, IBalance } from '@/interfaces'
   import type { Ref } from 'vue'
@@ -140,6 +180,7 @@
   import PopupBalanceDetail from '../components/popup/PopupBalanceDetail.vue'
   import { apiBalance } from '@/services'
 
+  const router = useRouter()
   const { listAssetToken } = storeToRefs(useBaseStore())
   const baseStore = useBaseStore()
   const tabs: Ref<ITab[]> = ref([
@@ -218,14 +259,15 @@
     totalBalanceUSD: ''
   })
   const detailRowBalance: Ref<IBalance> = ref({} as IBalance)
+  const isLoading: Ref<boolean> = ref(false)
   onMounted(() => {
     getListBalance()
   })
 
-  const getListBalance = async () => {
+  const getListBalance = async (): Promise<void> => {
     try {
+      isLoading.value = true
       const response = await apiBalance.getListBalance(tabActive.value, { ...filter.value, ...query.value })
-      console.log(response)
       dataBalance.value = response.balances || []
       query.value.total = response.totalElement
       dataSummaryBalance.value.numOfInvestor = response.numOfInvestor
@@ -237,20 +279,48 @@
       dataSummaryBalance.value.totalAvailableUSD = response.totalAvailableUSD
       dataSummaryBalance.value.totalLockedUSD = response.totalLockedUSD
       dataSummaryBalance.value.totalBalanceUSD = response.totalBalanceUSD
+      isLoading.value = false
     } catch (e) {
+      isLoading.value = false
       console.log(e)
     }
   }
 
   const handleClickTab = (tab: ITab) => {
     tabActive.value = tab.value
+    router.push({ params: { currency: tab.value } })
+    resetFilter()
+    getListBalance()
   }
-
-  const handleSelectCurrency = () => {}
+  const handleClickTabMore = (tab: string) => {
+    tabActive.value = tab
+    router.push({ params: { currency: tab } })
+    resetFilter()
+    getListBalance()
+  }
 
   const getTabBaseToken = computed<ITab[]>(() => {
     return tabs.value
   })
+
+  const handleSort = (sort: ISort) => {
+    filter.value.orderBy = sort.value as string
+    getListBalance()
+  }
+  const handleSearch = (text: string) => {
+    filter.value.search = text
+    getListBalance()
+  }
+
+  const handleApplyFilter = (): void => {
+    query.value.page = 1
+    getListBalance()
+  }
+  const handleReset = (): void => {
+    query.value.page = 1
+    resetFilter()
+    getListBalance()
+  }
 
   const handleLimitChange = (limit: number) => {
     query.value.page = 1
@@ -264,6 +334,27 @@
   const handleRowClick = (row: IBalance) => {
     detailRowBalance.value = row
     baseStore.setOpenPopup(true, 'popup-detail-balance')
+  }
+
+  const resetFilter = (): void => {
+    query.value = {
+      ...query.value,
+      page: 1
+    }
+
+    filter.value = {
+      ...filter.value,
+      toBalanceAmount: '',
+      fromBalanceAmount: '',
+      toLockedAmount: '',
+      fromLockedAmount: '',
+      toAvailableAmount: '',
+      fromAvailableAmount: '',
+      orderBy: '3',
+      search: ''
+    }
+    //@ts-ignore
+    // refFilter.value!.search = ''
   }
 </script>
 

@@ -34,13 +34,12 @@
   const route = useRoute()
 
   const baseStore = useBaseStore()
-  // const { listAssetToken } = storeToRefs(useBaseStore())
   const isOpen: Ref<boolean> = ref(false)
   const search: Ref<string> = ref('')
   const tabTokenMore = ref<IAssetToken[]>([])
   const originTabTokenMore = ref<IAssetToken[]>([])
   const emit = defineEmits<{
-    (e: 'select', token: IAssetToken): void
+    (e: 'select', token: string): void
   }>()
 
   onMounted(() => {
@@ -71,7 +70,7 @@
   })
 
   const handleSelectCurrency = (token: IAssetToken): void => {
-    emit('select', token)
+    emit('select', token.currency)
     isOpen.value = false
   }
 </script>

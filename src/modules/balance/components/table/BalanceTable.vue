@@ -1,5 +1,6 @@
 <template>
   <base-table
+    :loading="isLoading"
     :data="props.data"
     :query="query"
     label="investors"
@@ -47,6 +48,7 @@
   interface IProps {
     data: Array<Record<string, any>>
     query: IQuery
+    isLoading: boolean
   }
 
   const props = withDefaults(defineProps<IProps>(), {
@@ -55,7 +57,8 @@
       page: 1,
       limit: 20,
       total: 0
-    })
+    }),
+    isLoading: () => false
   })
 
   const emits = defineEmits<{
