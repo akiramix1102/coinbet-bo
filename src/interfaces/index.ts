@@ -72,6 +72,83 @@ export interface ICustomer {
   lastTransaction: string
 }
 
-// export interface ITransaction {
+export interface IBalance {
+  availableBalance: number
+  availableBalanceUSD: number
+  availableTrading: number
+  availableTradingUSD: number
+  balance: number
+  balanceUSD: number
+  countryCode: string | number
+  currency: string
+  currencyName: string
+  email: string
+  emailVerified: number
+  exchangeRate: number
+  fullName: string
+  id: number
+  lastTimeLogin: string | number | any
+  lastTransaction: string
+  latestRate: number
+  phone: string | number
+  phoneVerified: number
+  totalLockedAmount: number
+  totalLockedAmountUSD: number
+  userName: string
+}
 
-// }
+export interface IBalanceDetail {
+  balance: number
+  balanceDisplay: string
+  createdAt: string
+  createdBy: number
+  creditAddress: string
+  creditAmount: number
+  creditAmountDisplay: string
+  creditAmountToUsd: number
+  creditCurrency: string
+  creditFee: number
+  creditNetwork: string
+  creditUsdExchangeRate: number
+  debitAddress: string
+  debitAmount: number
+  debitAmountDisplay: string
+  debitAmountToUsd: number
+  debitCurrency: string
+  debitFee: number
+  debitNetwork: string
+  debitUsdExchangeRate: number
+  description: string
+  id: number
+  locked: number
+  lockedDisplay: string
+  refTransactionCode: string
+  status: string
+  transactionCode: string
+  transactionDate: string
+  transactionDay: string
+  transactionMillisecond: number
+  transactionType: string
+  updatedAt: string
+  updatedBy: number
+  userId: number
+}
+
+export interface ISummaryBalanceDetail {
+  openBalance: string
+  closeBalance: string
+  totalCreditAmount: string
+  totalDebitAmount: string
+}
+
+export interface IQueryBalanceDetail {
+  currency?: string
+  transactionType?: string
+  userId?: number
+  page?: number
+  limit?: number
+  search?: string
+  orderBy: string | number
+  total: number
+  type?: string | null | undefined
+}
