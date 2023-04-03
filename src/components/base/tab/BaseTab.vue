@@ -9,6 +9,7 @@
     >
       {{ tab.title }}
     </div>
+    <slot name="more-tab" />
   </div>
 </template>
 

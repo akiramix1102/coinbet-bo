@@ -19,6 +19,7 @@ declare module '@vue/runtime-core' {
     DropdownSort: typeof import('./src/components/filter/DropdownSort.vue')['default']
     EmptyBlock: typeof import('./src/components/empty/EmptyBlock.vue')['default']
     IEpLoading: typeof import('~icons/ep/loading')['default']
+    MoreToken: typeof import('./src/components/others/MoreToken.vue')['default']
     PopperFilter: typeof import('./src/components/filter/PopperFilter.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
@@ -26,8 +27,5 @@ declare module '@vue/runtime-core' {
     TheLayout: typeof import('./src/components/layout/TheLayout.vue')['default']
     ThePageLoading: typeof import('./src/components/loading/ThePageLoading.vue')['default']
     TheSidebar: typeof import('./src/components/layout/TheSidebar.vue')['default']
-  }
-  export interface ComponentCustomProperties {
-    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }
