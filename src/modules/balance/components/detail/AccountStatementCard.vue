@@ -60,7 +60,7 @@
       </div>
     </div>
     <div
-      class="rounded bg-[#0151fc] px-3 py-4 mt-2 font-semibold text-base text-[#fff] flex justify-between pr-[calc(100%-955px)]"
+      class="rounded bg-[#0151fc] px-3 py-3 mt-2 font-semibold text-base text-[#fff] flex justify-between pr-[calc(100%-955px)]"
     >
       <p>ENDING BALANCE</p>
       <p v-if="summaryTable.closeBalance === '0'">0 {{ getCurrency }}</p>
