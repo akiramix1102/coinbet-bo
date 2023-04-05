@@ -17,7 +17,7 @@ declare module '@vue/runtime-core' {
     BaseTab: typeof import('./src/components/base/tab/BaseTab.vue')['default']
     BaseTable: typeof import('./src/components/base/table/BaseTable.vue')['default']
     DropdownSort: typeof import('./src/components/filter/DropdownSort.vue')['default']
-    EmptyBlock: typeof import('./src/components/empty/EmptyBlock.vue')['default']
+    EmptyBlock: typeof import('./src/components/base/empty/EmptyBlock.vue')['default']
     IEpLoading: typeof import('~icons/ep/loading')['default']
     MoreToken: typeof import('./src/components/others/MoreToken.vue')['default']
     PopperFilter: typeof import('./src/components/filter/PopperFilter.vue')['default']

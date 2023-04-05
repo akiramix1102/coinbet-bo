@@ -97,6 +97,40 @@ export interface IBalance {
   userName: string
 }
 
+export interface ITransaction {
+    id?: number | any
+    transactionCode?: string | any
+    transactionType?: string | any
+    refTransactionCode?: string | any
+    transactionDate?: string | any
+    transactionDay?: string | any
+    transactionMillisecond?: string | any
+    userId?: number | any
+    description?: string | any
+    status?: string | any
+    createdAt?: string | any
+    updatedAt?: string | any
+    amount?: number | any
+    amountDisplay?: string | any
+    amountToUsd?: number | any
+    tokenUsdExchangeRate?: number | any
+    fee?: number | any
+    feeCurrency?: string | any
+    feeRate?: number | any
+    fromAddress?: string | any
+    toAddress?: string | any
+    transactionAmount?: number | any
+    transactionAmountToUsd?: number | any
+    transactionFee?: number | any
+    transactionFeeToUsd?: number | any
+    currency?: string | any
+    username?: string | any
+    fullName?: string | any
+    email?: string | any
+    phone: string | any
+    phoneCode: string
+}
+
 export interface IBalanceDetail {
   balance: number
   balanceDisplay: string
