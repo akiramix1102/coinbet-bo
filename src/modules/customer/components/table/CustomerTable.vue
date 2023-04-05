@@ -8,7 +8,7 @@
     @row-click="handleRowClick"
   >
     <el-table-column key="1" label="#" type="index" :index="indexMethod" align="center" width="80" />
-    <el-table-column key="2" label="name">
+    <el-table-column key="2" label="name" :width="isSmallScreen ? 190 : 200">
       <template #default="scope">
         <div class="be-flex align-center">
           <span class="d-ib mr-2 line-clamp-1">{{ scope.row.fullName }}</span>
@@ -17,16 +17,16 @@
     </el-table-column>
     <!-- email address / wallet address -->
 
-    <el-table-column key="3" label="email" prop="email" :width="isSmallScreen ? 230 : 300">
+    <el-table-column key="3" label="email" prop="email">
       <template #default="scope">
         <p class="line-clamp-1">{{ scope.row.email }}</p>
       </template>
     </el-table-column>
-    <el-table-column key="4" label="Address" prop="address" :width="isSmallScreen ? 200 : 300">
+    <el-table-column key="4" label="Address" prop="address" :width="isSmallScreen ? 250 : 300">
       <template #default="scope">
         <div class="flex items-center justify-between">
           <div class="text-add">
-            {{ useFormatTxCode(scope.row.username, isSmallScreen ? 5 : 10) }}
+            {{ useFormatTxCode(scope.row.username, isSmallScreen ? 8 : 10) }}
           </div>
           <div class="cursor h-6 mr-10" @click="useCopy(scope.row.username), (isConflictClick = true)">
             <base-icon icon="copy" size="24" color="#A19F9D" />
@@ -35,14 +35,15 @@
       </template>
     </el-table-column>
 
-    <el-table-column key="5" label="level" prop="level" :width="isSmallScreen ? 100 : 150">
+    <el-table-column key="5" label="level" prop="level" :width="isSmallScreen ? 120 : 150">
       <template #default="scope">
         <span>{{ getLevelCurrent(scope.row) }}</span>
       </template>
     </el-table-column>
-    <el-table-column key="6" label="date" prop="createdDate" width="200">
+    <el-table-column key="6" label="date" prop="createdDate" width="140">
       <template #default="scope">
-        <span>{{ useFormatDateHourMs(scope.row.createdDate) }}</span>
+        <p>{{ useFormatDateMDY(scope.row.createdDate) }}</p>
+        <p class="text-sm text-description">{{ useFormatDateHMS(scope.row.createdDate) }}</p>
       </template>
     </el-table-column>
     <el-table-column key="7" label="status" prop="emailVerified" align="center" :width="isSmallScreen ? 140 : 160">
@@ -56,7 +57,9 @@
 <script setup lang="ts">
   import useCopy from '@/composables/copy'
   import useFormatTxCode from '@/composables/formatTxCode'
-  import useFormatDateHourMs from '@/composables/formatDateHourMs'
+  import useFormatDateHMS from '@/composables/formatDateHMS'
+  import useFormatDateMDY from '@/composables/formatDateMDY'
+
   import type { ICustomer, IQuery } from '@/interfaces'
   interface IProps {
     data: Array<Record<string, any>>
@@ -81,7 +84,7 @@
   const isConflictClick = ref(false)
 
   const isSmallScreen = computed(() => {
-    return window.innerWidth < 1400
+    return window.innerWidth < 1440
   })
 
   const indexMethod = (index: number) => {
