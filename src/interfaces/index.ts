@@ -186,3 +186,44 @@ export interface IQueryBalanceDetail {
   total: number
   type?: string | null | undefined
 }
+
+export interface ISummaryRequest {
+  transactionType: string
+  feeCurrency?: number
+  totalAmount: number
+  totalAmountUsd: number
+  totalFee?: number
+  totalFeeUsd?: number
+}
+export interface ITransactionWithdraw {
+  id: number | string
+  transactionType: string
+  transactionDate: string
+  transactionDay: string
+  transactionMillisecond: number
+  currency: string
+  currencyName: string
+  network: string
+  networkName: string
+  userId: number
+  fromAddress: string
+  toAddress: string
+  transactionHash: string
+  amount: number
+  amountDisplay: string
+  transactionFee: number
+  amountToUsd: number
+  nonce: number
+  description: string
+  status: string
+  accountTransactionId: number | any
+  tokenUsdExchangeRate: number
+  createdAt: string
+  updatedAt: null
+  rejectedAt: null
+  rejectedReason: null
+  isLimitAmount: number
+  username: string
+  fullName: string
+  email: string
+}
