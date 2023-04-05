@@ -68,7 +68,8 @@
       <el-table-column label="tier" prop="tier" width="100" align="center" />
       <el-table-column label="date" width="200">
         <template #default="scope">
-          <span class="text-base">{{ useFormatDateHourMs(scope.row.inviteDate) }} </span>
+          <p class="text-base">{{ useFormatDateMDY(scope.row.inviteDate) }}</p>
+          <p class="text-sm text-description">{{ useFormatDateHMS(scope.row.inviteDate) }}</p>
         </template>
       </el-table-column>
       <el-table-column label="status" align="center" width="120">
@@ -88,6 +89,8 @@
   import type { ICustomer, ISort } from '@/interfaces'
   import useFormatDateHourMs from '@/composables/formatDateHourMs'
   import { apiCustomer } from '@/services'
+  import useFormatDateMDY from '@/composables/formatDateMDY'
+  import useFormatDateHMS from '@/composables/formatDateHMS'
   interface IProps {
     rowData: ICustomer
   }
