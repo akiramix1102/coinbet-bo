@@ -77,8 +77,8 @@
               <el-input
                 placeholder="From"
                 v-model="filter.fromAvailableAmount"
-                @keypress.native="useOnlyNumber($event, filter.fromAvailableAmount)"
-                @keyup.native="useFormatNumberInput($event)"
+                @keypress="useOnlyNumber($event, filter.fromAvailableAmount)"
+                @keyup="useFormatNumberInput($event)"
               >
                 <template #prefix>
                   <span class="h-full text-base flex items-center text-[#0a0b0d]">$</span>
@@ -89,8 +89,8 @@
               <el-input
                 placeholder="To"
                 v-model="filter.toAvailableAmount"
-                @keypress.native="useOnlyNumber($event, filter.toAvailableAmount)"
-                @keyup.native="useFormatNumberInput($event)"
+                @keypress="useOnlyNumber($event, filter.toAvailableAmount)"
+                @keyup="useFormatNumberInput($event)"
               >
                 <template #prefix>
                   <span class="h-full text-base flex items-center text-[#0a0b0d]">$</span>
@@ -103,8 +103,8 @@
               <el-input
                 placeholder="From"
                 v-model="filter.fromLockedAmount"
-                @keypress.native="useOnlyNumber($event, filter.fromLockedAmount)"
-                @keyup.native="useFormatNumberInput($event)"
+                @keypress="useOnlyNumber($event, filter.fromLockedAmount)"
+                @keyup="useFormatNumberInput($event)"
               >
                 <template #prefix>
                   <span class="h-full text-base flex items-center text-[#0a0b0d]">$</span>
@@ -115,8 +115,8 @@
               <el-input
                 placeholder="To"
                 v-model="filter.toLockedAmount"
-                @keypress.native="useOnlyNumber($event, filter.toLockedAmount)"
-                @keyup.native="useFormatNumberInput($event)"
+                @keypress="useOnlyNumber($event, filter.toLockedAmount)"
+                @keyup="useFormatNumberInput($event)"
               >
                 <template #prefix>
                   <span class="h-full text-base flex items-center text-[#0a0b0d]">$</span>
@@ -129,8 +129,8 @@
               <el-input
                 placeholder="From"
                 v-model="filter.fromBalanceAmount"
-                @keypress.native="useOnlyNumber($event, filter.fromBalanceAmount)"
-                @keyup.native="useFormatNumberInput($event)"
+                @keypress="useOnlyNumber($event, filter.fromBalanceAmount)"
+                @keyup="useFormatNumberInput($event)"
               >
                 <template #prefix>
                   <span class="h-full text-base flex items-center text-[#0a0b0d]">$</span>
@@ -141,8 +141,8 @@
               <el-input
                 placeholder="To"
                 v-model="filter.toBalanceAmount"
-                @keypress.native="useOnlyNumber($event, filter.toBalanceAmount)"
-                @keyup.native="useFormatNumberInput($event)"
+                @keypress="useOnlyNumber($event, filter.toBalanceAmount)"
+                @keyup="useFormatNumberInput($event)"
               >
                 <template #prefix>
                   <span class="h-full text-base flex items-center text-[#0a0b0d]">$</span>
@@ -206,7 +206,7 @@
       value: 'BUSD'
     }
   ])
-  const tabActive = ref('MAGIC')
+  const tabActive: Ref<string> = ref('MAGIC')
   const listSort: Ref<ISort[]> = ref([
     {
       title: 'Created date',
