@@ -107,7 +107,8 @@
       </el-table-column>
       <el-table-column label="date" width="180">
         <template #default="scope">
-          <span class="text-base">{{ useFormatDateHourMs(scope.row.transactionDate) }} </span>
+          <p class="text-base">{{ useFormatDateMDY(scope.row.transactionDate) }}</p>
+          <p class="text-sm text-description">{{ useFormatDateHMS(scope.row.transactionDate) }}</p>
         </template>
       </el-table-column>
       <el-table-column label="status" align="center" width="120">
@@ -140,6 +141,8 @@
   import useFormatDateHourMs from '@/composables/formatDateHourMs'
   import useFormatCurrency from '@/composables/formatCurrency'
   import { apiCustomer } from '@/services'
+  import useFormatDateHMS from '@/composables/formatDateHMS'
+  import useFormatDateMDY from '@/composables/formatDateMDY'
 
   interface IProps {
     rowData: ICustomer
