@@ -19,7 +19,8 @@
       </el-table-column>
       <el-table-column label="last login" width="200">
         <template #default="scope">
-          <span class="inline-block">{{ useFormatDateHourMs(scope.row.lastLogin) }}</span>
+          <p class="text-base">{{ useFormatDateMDY(scope.row.lastLogin) }}</p>
+          <p class="text-sm text-description">{{ useFormatDateHMS(scope.row.lastLogin) }}</p>
         </template>
       </el-table-column>
       <el-table-column label="2fa status" width="150" align="center">
@@ -32,7 +33,8 @@
 </template>
 
 <script setup lang="ts">
-  import useFormatDateHourMs from '@/composables/formatDateHourMs'
+  import useFormatDateHMS from '@/composables/formatDateHMS'
+  import useFormatDateMDY from '@/composables/formatDateMDY'
   import type { ICustomer } from '@/interfaces'
   import { apiCustomer } from '@/services'
 
