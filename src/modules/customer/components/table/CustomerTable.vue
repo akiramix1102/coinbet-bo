@@ -42,7 +42,8 @@
     </el-table-column>
     <el-table-column key="6" label="date" prop="createdDate" width="140">
       <template #default="scope">
-        <span>{{ useFormatDateHourMs(scope.row.createdDate) }}</span>
+        <p>{{ useFormatDateMDY(scope.row.createdDate) }}</p>
+        <p class="text-sm text-description">{{ useFormatDateHMS(scope.row.createdDate) }}</p>
       </template>
     </el-table-column>
     <el-table-column key="7" label="status" prop="emailVerified" align="center" :width="isSmallScreen ? 140 : 160">
@@ -56,7 +57,9 @@
 <script setup lang="ts">
   import useCopy from '@/composables/copy'
   import useFormatTxCode from '@/composables/formatTxCode'
-  import useFormatDateHourMs from '@/composables/formatDateHourMs'
+  import useFormatDateHMS from '@/composables/formatDateHMS'
+  import useFormatDateMDY from '@/composables/formatDateMDY'
+
   import type { ICustomer, IQuery } from '@/interfaces'
   interface IProps {
     data: Array<Record<string, any>>
