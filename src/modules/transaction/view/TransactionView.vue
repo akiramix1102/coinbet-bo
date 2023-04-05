@@ -4,11 +4,20 @@
       <base-tab :list-tab="tabsHeader" :tab-active="tabActiveHeader" @click="handleClickTabHeader">
         <template #more-tab>
           <MoreToken @select="handleClickTabMore"></MoreToken>
+          <div class="flex right-0 ml-auto">
+            <div class="btn-carousel cursor prev" @click="handleClickArrow('prev')">
+              <base-icon icon="icon-prev" size="32" />
+            </div>
+            <div class="btn-carousel cursor next" @click="handleClickArrow('next')">
+              <base-icon icon="icon-next" size="32" />
+            </div>
+          </div>
         </template>
       </base-tab>
-      <div class="p-6 flex">
+
+      <div ref="wrapCard" class="p-6 flex overflow-hidden">
         <div
-          v-for="(value, index) in dataHeaderCard"
+          v-for="(value, index) in listSortedTransactionType"
           :key="index"
           class="p-4 border border-solid border-[#dbdbdb] mr-6 rounded-lg min-w-[240px]"
         >
@@ -17,10 +26,10 @@
             <div><base-icon :icon="renderIconCard(value.transactionType)" size="24" /></div>
           </div>
           <div class="my-2 text-[#0a0b0d] font-semibold">
-            <p class="text-[24px] leading-6">{{ value.totalAmount }}</p>
+            <p class="text-[24px] leading-6 break-all">{{ userFormatNumber(value.totalAmount) }}</p>
           </div>
           <div>
-            <span class="text-sm text-[#5b616e]">~${{ value.totalAmountUsd }}</span>
+            <span class="text-sm text-[#5b616e]">~${{ userFormatNumber(value.totalAmountUsd) }}</span>
           </div>
         </div>
       </div>
@@ -30,27 +39,40 @@
         :popper="false"
         width-dropdown="230"
         :popup-name="'popup-filter-transaction'"
+        :sort-active="searchParams.orderBy"
         @sort="handleSort"
       >
       </base-filter>
-      <table-transaction class="px-6" :is-loading="isLoading" :data="data" :query="query"></table-transaction>
+      <table-transaction
+        class="px-6"
+        :is-loading="isLoading"
+        :data="data"
+        :query="query"
+        @limit-change="handleLimitChange"
+        @page-change="handlePageChange"
+        @row-click="handleRowClick"
+      ></table-transaction>
     </div>
-
     <popup-filter-transaction
+      :list-transaction-type="listTransactionType"
       :is-show-footer="true"
       @reset="handleResetFilter"
       @apply="handleApplyFilter"
       @search="handleSearch"
     ></popup-filter-transaction>
+    <popup-detail-transaction :detail-transaction="detailRowTransaction"></popup-detail-transaction>
   </div>
 </template>
 
 <script setup lang="ts">
   import type { ITab, ISort } from '@/interfaces'
   import PopupFilterTransaction from '../components/popup/PopupFilterTransaction.vue'
+  import PopupDetailTransaction from '../components/popup/PopupDetailTransaction.vue'
   import { apiTransaction } from '@/services'
   import { useBaseStore } from '@/stores/base'
+  import type { ITransaction } from '@/interfaces'
   import TableTransaction from '../components/TableTransaction.vue'
+  import userFormatNumber from '@/composables/formatNumber'
   const baseStore = useBaseStore()
 
   const router = useRouter()
@@ -58,19 +80,27 @@
   const isLoading: Ref<boolean> = ref(false)
 
   interface IDataCard {
-    numOfTransaction: number | any
     totalAmount: number | any
     transactionType: string | any
     totalAmountUsd: number | any
   }
+  interface ITransactionType {
+    typeName: string | any
+    displayName: string | any
+    id: number
+    position: number
+    status: string | any
+    module: string | any
+  }
   const searchParams = ref({
-    transactionType: '',
+    transactionType: 'DEPOSIT',
     status: '',
     fromTransactionDate: '',
     toTransactionDate: '',
     fromTransactionAmount: '',
     toTransactionAmount: '',
-    search: ''
+    search: '',
+    orderBy: '1'
   })
 
   const tabsHeader = ref<ITab[]>([
@@ -99,8 +129,7 @@
   const query = ref({
     page: 1,
     limit: 20,
-    total: 0,
-    orderBy: '1'
+    total: 0
   })
   const listSort = ref<ISort[]>([
     {
@@ -116,101 +145,139 @@
       value: '3'
     }
   ])
-
-  const dataHeaderCard = ref<IDataCard[]>([
-    {
-      numOfTransaction: 1,
-      totalAmount: 19689480.0,
-      transactionType: 'DEPOSIT',
-      totalAmountUsd: '196,894.80'
-    },
-    {
-      numOfTransaction: 2,
-      totalAmount: 19689480.0,
-      transactionType: 'WITHDRAW',
-      totalAmountUsd: '196,894.80'
-    },
-    {
-      numOfTransaction: 3,
-      totalAmount: 19689480.0,
-      transactionType: 'TRANSFER',
-      totalAmountUsd: '196,894.80'
-    },
-    {
-      numOfTransaction: 4,
-      totalAmount: 19689480.0,
-      transactionType: 'BONUS',
-      totalAmountUsd: '196,894.80'
-    },
-    {
-      numOfTransaction: 5,
-      totalAmount: 19689480.0,
-      transactionType: 'BET',
-      totalAmountUsd: '196,894.80'
-    },
-    {
-      numOfTransaction: 6,
-      totalAmount: 19689480.0,
-      transactionType: 'PRIZE',
-      totalAmountUsd: '196,894.80'
-    },
-    {
-      numOfTransaction: 7,
-      totalAmount: 19689480.0,
-      transactionType: 'BUY',
-      totalAmountUsd: '196,894.80'
-    }
-  ])
+  const detailRowTransaction: Ref<ITransaction> = ref({} as ITransaction)
+  const dataHeaderCard = ref<IDataCard[]>([])
   const data = ref([])
-
+  const listTransactionType = ref<ITransactionType[]>([])
   const tabActiveHeader = ref('MAGIC')
 
-  onMounted(async () => {
-    tabActiveHeader.value = (route.params.currency as string).toUpperCase()
-    await getListTransaction()
+  const wrapCard = ref(null)
+
+  const handleClickArrow = (type: 'prev' | 'next') => {
+    const elm = wrapCard.value as unknown as HTMLElement
+    const left = type === 'prev' ? 0 : isSmallScreen ? 1000 : 264
+    elm.scrollTo({
+      top: 0,
+      left,
+      behavior: 'smooth'
+    })
+  }
+  const isSmallScreen = computed(() => {
+    return window.innerWidth < 1400
   })
+
+  const renderTitleCard = (transactionType: string) => {
+    if (transactionType === 'DEPOSIT') return 'Total Deposit'
+    if (transactionType === 'BONUS') return 'Total Bonus'
+    if (transactionType === 'TRANSFER') return 'Total Transfer'
+    if (transactionType === 'WITHDRAW') return 'Total Withdraw'
+    if (transactionType === 'BUY_TOKEN') return 'Total Buy'
+    if (transactionType === 'PLACE_BET') return 'Total Bet'
+    if (transactionType === 'WIN') return 'Total Prize'
+    else return ''
+  }
+  const renderIconCard = (transactionType: string) => {
+    if (transactionType === 'DEPOSIT') return 'icon-download'
+    if (transactionType === 'BONUS') return 'icon-gift'
+    if (transactionType === 'TRANSFER') return 'icon-transfer'
+    if (transactionType === 'WITHDRAW') return 'icon-upload'
+    else return 'icon-default'
+  }
+
+  const handleClickTabHeader = (tab: ITab) => {
+    tabActiveHeader.value = tab.value
+    router.push({ params: { currency: tab.value } })
+    getListTransaction()
+  }
 
   const handleClickTabMore = (tab: string) => {
     tabActiveHeader.value = tab
     router.push({ params: { currency: tab } })
-    resetFilter()
     getListTransaction()
   }
+
+  onMounted(async () => {
+    tabActiveHeader.value = (route.params.currency as string).toUpperCase()
+    getListTransactionType()
+    await getListTransaction()
+  })
+
+    const getListTransactionType = async () => {
+    try {
+      const params = {
+        module: 'transaction'
+      }
+      const result = await apiTransaction.getListTransactionType(params)
+      listTransactionType.value = result
+    } catch (e) {
+      listTransactionType.value = []
+    }
+  }
+
+  const listSortedTransactionType = computed(() => {
+    const sortedRules = [
+      { transactionType: 'DEPOSIT' },
+      { transactionType: 'WITHDRAW' },
+      { transactionType: 'TRANSFER' },
+      { transactionType: 'BONUS' },
+      { transactionType: 'PLACE_BET' },
+      { transactionType: 'WIN' },
+      { transactionType: 'BUY_TOKEN' }
+    ]
+    let sortedTransactionType: Array<Record<string, any>> = []
+    sortedRules.forEach(rule => {
+      let filter: Array<Record<string, any>> = dataHeaderCard.value.filter(item => item.transactionType === rule.transactionType)
+      sortedTransactionType = [...sortedTransactionType, ...filter]
+    })
+    return sortedTransactionType
+  })
 
   const getListTransaction = async () => {
     try {
       isLoading.value = true
       const params = {
-        // ...query,
         status: searchParams.value.status,
         transactionType: searchParams.value.transactionType,
-        orderBy: query.value.orderBy,
-        limit: query.value.limit,
-        page: query.value.page,
+        orderBy: searchParams.value.orderBy,
         currency: tabActiveHeader.value,
         fromDate: searchParams.value.fromTransactionDate,
         toDate: searchParams.value.toTransactionDate,
         fromAmount: searchParams.value.fromTransactionAmount,
         toAmount: searchParams.value.toTransactionAmount,
-        total: null
+        ...query.value
       }
       const result = await apiTransaction.getListTransaction('search', params)
-      console.log('🚀 ~ file: TransactionView.vue:176 ~ getListTransaction ~ result:', result)
       data.value = result.transactions.content
-      console.log('🚀 ~ file: TransactionView.vue:200 ~ getListTransaction ~ data.value:', data.value)
-      query.value.total = result.totalElements
+      query.value.total = result.transactions.totalElements
+      const arrTransactionType = listTransactionType.value.map(elm => elm.typeName)
+      dataHeaderCard.value = result.summary.filter(item => arrTransactionType.includes(item.transactionType))
       isLoading.value = false
     } catch (e) {
+      isLoading.value = false
       data.value = []
     }
   }
   const handleSort = (sort: ISort) => {
-    query.value.orderBy = sort.value as string
+    searchParams.value.orderBy = sort.value as string
     getListTransaction()
   }
   const handleSearch = (text: string) => {
     searchParams.value.search = text
     getListTransaction()
+  }
+
+  const handleLimitChange = (limit: number) => {
+    query.value.page = 1
+    query.value.limit = limit
+    getListTransaction()
+  }
+  const handlePageChange = (page: number) => {
+    query.value.page = page
+    getListTransaction()
+  }
+  const handleRowClick = (row: ITransaction) => {
+    detailRowTransaction.value = row
+    baseStore.setOpenPopup(true, 'popup-detail-transaction')
   }
 
   const resetFilter = () => {
@@ -225,7 +292,8 @@
       toTransactionDate: '',
       fromTransactionAmount: '',
       toTransactionAmount: '',
-      search: ''
+      search: '',
+      orderBy: '1'
     }
   }
 
@@ -245,27 +313,20 @@
     getListTransaction()
   }
 
-  const renderTitleCard = (transactionType: string) => {
-    if (transactionType === 'DEPOSIT') return 'Total Deposit'
-    if (transactionType === 'BONUS') return 'Total Bonus'
-    if (transactionType === 'TRANSFER') return 'Total Transfer'
-    if (transactionType === 'WITHDRAW') return 'Total Withdraw'
-    if (transactionType === 'BUY') return 'Total Buy'
-    if (transactionType === 'BET') return 'Total Bet'
-    if (transactionType === 'PRIZE') return 'Total Prize'
-  }
-  const renderIconCard = (transactionType: string) => {
-    if (transactionType === 'DEPOSIT') return 'icon-download'
-    if (transactionType === 'BONUS') return 'icon-gift'
-    if (transactionType === 'TRANSFER') return 'icon-transfer'
-    if (transactionType === 'WITHDRAW') return 'icon-upload'
-    else return 'icon-default'
-  }
-
-  const handleClickTabHeader = (tab: ITab) => {
-    tabActiveHeader.value = tab.value
-    router.push({ params: { currency: tab.value } })
-  }
 </script>
 
-<style scoped></style>
+<style scoped>
+  .btn-carousel {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.1));
+  }
+  .next {
+    margin: 0 12px 0 16px;
+  }
+</style>

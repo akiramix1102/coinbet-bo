@@ -4,12 +4,12 @@
     <el-form label-position="top">
       <div class="flex justify-between">
         <el-form-item class="flex-1 mr-10" label="Transaction Type">
-          <el-select v-model="filter.transactionType" :clearable="true" class="w-full">
+          <el-select v-model="filter.transactionType" class="w-full">
             <el-option
-              v-for="(type, index) in listTransactionType"
+              v-for="(type, index) in props.listTransactionType"
               :key="index"
-              :label="type.title"
-              :value="type.value"
+              :label="type.displayName"
+              :value="type.typeName"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -83,13 +83,19 @@
 
 <script setup lang="ts">
   import useDisableTime from '@/composables/disableTime'
+  interface IProps {
+    listTransactionType: Array<Record<string, any>>
+  }
+  const props = withDefaults(defineProps<IProps>(), {
+    listTransactionType: () => []
+  })
   const filter = ref({
     fromTransactionDate: '',
     toTransactionDate: '',
     fromTransactionAmount: '',
     toTransactionAmount: '',
     status: '',
-    transactionType: ''
+    transactionType: 'DEPOSIT'
   })
 
   const listStatus = ref<Record<string, any>>([
@@ -104,28 +110,6 @@
     {
       title: 'Success',
       value: 'SUCCESS'
-    }
-  ])
-  const listTransactionType = ref<Record<string, any>>([
-    {
-      title: 'Deposit',
-      value: 'DEPOSIT'
-    },
-    {
-      title: 'Withdraw',
-      value: 'WITHDRAW'
-    },
-    {
-      title: 'Transfer',
-      value: 'TRANSFER'
-    },
-    {
-      title: 'Bonus',
-      value: 'BONUS'
-    },
-    {
-      title: 'Buy',
-      value: 'BUY'
     }
   ])
   const emit = defineEmits(['reset', 'apply'])

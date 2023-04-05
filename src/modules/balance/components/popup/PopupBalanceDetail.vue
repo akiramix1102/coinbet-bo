@@ -20,16 +20,16 @@
             <span>{{ rowData.email }}</span>
             <span> | {{ rowData.userName }}</span>
             <div class="cursor-pointer ml-2 flex" @click="handleCopyTransaction(rowData.userName)">
-              <base-icon icon="balance-icon-copy" size="20" color="#A19F9D" />
+              <base-icon icon="icon-copy" size="20" color="#A19F9D" />
             </div>
           </div>
         </div>
       </div>
       <balance-detail-card :data-card="rowData" />
       <account-statement-card
-        :isLoading="isLoading"
-        :dataTable="dataTable"
-        :summaryTable="summaryTable"
+        :is-loading="isLoading"
+        :data-table="dataTable"
+        :summary-table="summaryTable"
         :query="query"
         @page-change="handlePageChange"
         @limit-change="handleLimitChange"

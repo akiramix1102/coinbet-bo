@@ -37,4 +37,14 @@ export default class TransactionRepository {
       return Promise.reject(error)
     }
   }
+  async getListTransactionType(params: Record<string, any>): Promise<any> {
+    try {
+      const _params = this.convertParams(params)
+      const rs = await request.get(`${this.prefix}/transaction-type/list`, { params: _params })
+      return Promise.resolve(rs.data.data)
+    } catch (error) {
+      console.log(error)
+      return Promise.reject(error)
+    }
+  }
 }

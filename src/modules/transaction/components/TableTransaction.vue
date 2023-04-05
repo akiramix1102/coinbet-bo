@@ -9,17 +9,35 @@
   >
     <el-table-column key="1" label="#" type="index" :index="indexMethod" align="center" width="80" />
 
-    <el-table-column key="2" label="transaction id" prop="transactionId">
+    <el-table-column key="2" label="transaction id" :width="isSmallScreen ? 260 : ''">
       <template #default="scope">
-        <span>{{ useFormatTxCode(scope.row.transactionCode, 10) }}</span>
+        <div class="flex items-center">
+          <span class="mr-4 w-[220px] inline-block">{{ useFormatTxCode(scope.row.transactionCode, 10) }}</span>
+          <span @click="useCopy(scope.row.transactionCode)">
+            <base-icon icon="icon-copy" size="24" color="#A19F9D" />
+          </span>
+        </div>
       </template>
     </el-table-column>
-    <el-table-column key="63" label="date" prop="createdDate" width="220">
+    <el-table-column key="3" label="type" :width="isSmallScreen ? 130 : 160">
       <template #default="scope">
-        <span>{{ useFormatDateHourMs(scope.row.transactionMillisecond) }}</span>
+        <span>{{ useCapitalizeFirstLetter(scope.row.transactionType) }}</span>
       </template>
     </el-table-column>
-    <el-table-column key="4" label="customer" prop="createdDate" width="200">
+    <el-table-column key="4" label="game" :width="isSmallScreen ? 100 : 150">
+      <template #default="scope">
+        <span>{{ scope.row.marketName }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column key="5" label="date" :width="isSmallScreen ? 130 : 160">
+      <template #default="scope">
+        <div>
+          <p>{{ useFormateDateMDY(scope.row.transactionMillisecond) }}</p>
+          <p class="text-sm text-[#5b616e]">{{ useFormatDateHMS(scope.row.transactionMillisecond) }}</p>
+        </div>
+      </template>
+    </el-table-column>
+    <el-table-column key="6" label="customer" :width="isSmallScreen ? 150 : 250">
       <template #default="scope">
         <div>
           <p>{{ scope.row.fullName }}</p>
@@ -27,24 +45,29 @@
         </div>
       </template>
     </el-table-column>
-    <el-table-column key="5" label="status" prop="emailVerified" align="center" :width="isSmallScreen ? 140 : 160">
+    <el-table-column key="7" label="status" align="center" :width="isSmallScreen ? 120 : 140">
       <template #default="scope">
-        <span :class="checkType(scope.row.status)">{{ checkStatus(scope.row.status) }}</span>
+        <span :class="checkType(scope.row.status)">{{ useCapitalizeFirstLetter(scope.row.status) }}</span>
       </template>
     </el-table-column>
-    <el-table-column key="6" label="amount" prop="emailVerified" align="center" :width="isSmallScreen ? 140 : 160">
+    <el-table-column key="8" label="amount" align="right" :width="isSmallScreen ? '' : 250">
       <template #default="scope">
-        <span :class="checkType(scope.row.emailVerified)">{{ checkStatus(scope.row.emailVerified) }}</span>
+        <div>
+          <p :class="checkValueAmountDisplay(scope.row.amountDisplay)">{{ scope.row.amountDisplay }}</p>
+          <p class="text-sm text-[#5b616e]">~${{ scope.row.amountToUsd.toFixed(2) }}</p>
+        </div>
       </template>
     </el-table-column>
   </base-table>
 </template>
 
 <script setup lang="ts">
-  import type { ICustomer, IQuery } from '@/interfaces'
+  import type { IQuery, ITransaction } from '@/interfaces'
   import useCopy from '@/composables/copy'
   import useFormatTxCode from '@/composables/formatTxCode'
-  import useFormatDateHourMs from '@/composables/formatDateHourMs'
+  import useFormatDateHMS from '@/composables/formatDateHMS'
+  import useFormateDateMDY from '@/composables/formatDateMDY'
+  import useCapitalizeFirstLetter from '@/composables/capitalizeLetter'
   interface IProps {
     data: Array<Record<string, any>>
     query: IQuery
@@ -63,7 +86,7 @@
   const emits = defineEmits<{
     (e: 'page-change', page: number): void
     (e: 'limit-change', limit: number): void
-    (e: 'row-click', row: ICustomer): void
+    (e: 'row-click', row: ITransaction): void
   }>()
 
   const isConflictClick = ref(false)
@@ -72,30 +95,30 @@
     return window.innerWidth < 1400
   })
 
+  const checkValueAmountDisplay = (value: string | null) => {
+    if (value) {
+      if (value.indexOf('+') !== -1) {
+        return 'text-[#129961]'
+      } else {
+        return 'text-[#cf202f]'
+      }
+    } else return ''
+  }
+
   const indexMethod = (index: number) => {
     return (props.query.page - 1) * props.query.limit + index + 1
   }
 
-  const getLevelCurrent = (row: Record<string, any>) => {
-    try {
-      if (row.level && row.level === 'MM') {
-        return 'MM'
-      } else if (row.level !== 'Default') {
-        return `Level ${row.level.match(/\d+/)[0]}`
-      } else {
-        return 'Default'
-      }
-    } catch (error) {
-      return ''
-    }
-  }
-
   const checkType = (type: string) => {
-    return type === '1' ? 'status-verified' : 'status-not-verified'
-  }
-
-  const checkStatus = (status: string) => {
-    return status === '1' ? 'Verified' : 'Unverified'
+    return type === 'PENDING'
+      ? 'status status-pending'
+      : type === 'FAILED'
+      ? 'status status-error'
+      : type === 'PROCESSING'
+      ? 'status status-warning'
+      : type === 'REJECTED'
+      ? 'status status-rejected'
+      : 'status status-success'
   }
 
   const handleRowClick = (row: Record<string, any>) => {
@@ -103,7 +126,7 @@
       isConflictClick.value = false
       return
     }
-    emits('row-click', row as ICustomer)
+    emits('row-click', row as ITransaction)
   }
 </script>
 
