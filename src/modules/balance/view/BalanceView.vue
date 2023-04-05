@@ -180,6 +180,7 @@
   import PopupBalanceDetail from '../components/popup/PopupBalanceDetail.vue'
   import { apiBalance } from '@/services'
 
+  const route = useRoute()
   const router = useRouter()
   const { listAssetToken } = storeToRefs(useBaseStore())
   const baseStore = useBaseStore()
@@ -261,6 +262,7 @@
   const detailRowBalance: Ref<IBalance> = ref({} as IBalance)
   const isLoading: Ref<boolean> = ref(false)
   onMounted(() => {
+    tabActive.value = route.params.currency as string
     getListBalance()
   })
 
