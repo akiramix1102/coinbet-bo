@@ -2,6 +2,7 @@
   "extends": "@vue/tsconfig/tsconfig.web.json",
   "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "src/**/*.d.ts", "*.d.ts", "*.ts"],
   "compilerOptions": {
+    "ignoreDeprecations": "5.0",
     "target": "esnext",
     "module": "esnext",
     "strict": true,
