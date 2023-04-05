@@ -34,6 +34,13 @@
         <p class="text-[10px] mt-[3px] leading-3 text-[#201f1e]">Transaction</p>
       </div>
     </router-link>
+    <router-link v-slot="{ navigate, isActive }" :to="{ name: 'RequestMain' }" custom>
+      <div class="menu" role="link" :class="{ 'active-link': isActive }" @click="navigate">
+        <base-icon icon="menu-request" size="32" class="icon" />
+        <base-icon icon="menu-request-active" size="32" class="icon-active" />
+        <p class="text-[10px] mt-[3px] leading-3 text-[#201f1e]">Request</p>
+      </div>
+    </router-link>
   </div>
 </template>
 
